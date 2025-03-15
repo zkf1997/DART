@@ -38,82 +38,82 @@ GPU, intel i7-13700K CPU, 64GiB memory. The workstation runs with Ubuntu 22.04.4
   * [BABEL](https://download.is.tue.mpg.de/download.php?domain=teach&resume=1&sfile=babel-data/babel-teach.zip) (Only required for training)
   * [HumanML3D](https://github.com/EricGuo5513/HumanML3D)(Only required for training)
 
-<summary> 
-Project folder structure of separately downloaded data:
-</summary>
-<details>
-
-  ```
-  ./
-  ├── data
-  │   ├── smplx_lockedhead_20230207
-  │   │   └── models_lockedhead
-  │   │       ├── smplh
-  │   │       │   ├── SMPLH_FEMALE.pkl
-  │   │       │   └── SMPLH_MALE.pkl
-  │   │       └── smplx
-  │   │           ├── SMPLX_FEMALE.npz
-  │   │           ├── SMPLX_MALE.npz
-  │   │           └── SMPLX_NEUTRAL.npz
-  │   ├── amass
-  │   │   ├──  babel-teach
-  │   │   │        ├── train.json
-  │   │   │        └── val.json
-  │   │   ├──  smplh_g
-  │   │   │        ├── ACCAD
-  │   │   │        ├── BioMotionLab_NTroje
-  │   │   │        ├── BMLhandball
-  │   │   │        ├── BMLmovi
-  │   │   │        ├── CMU
-  │   │   │        ├── CNRS
-  │   │   │        ├── DanceDB
-  │   │   │        ├── DFaust_67
-  │   │   │        ├── EKUT
-  │   │   │        ├── Eyes_Japan_Dataset
-  │   │   │        ├── GRAB
-  │   │   │        ├── HUMAN4D
-  │   │   │        ├── HumanEva
-  │   │   │        ├── KIT
-  │   │   │        ├── MPI_HDM05
-  │   │   │        ├── MPI_Limits
-  │   │   │        ├── MPI_mosh
-  │   │   │        ├── SFU
-  │   │   │        ├── SOMA
-  │   │   │        ├── SSM_synced
-  │   │   │        ├── TCD_handMocap
-  │   │   │        ├── TotalCapture
-  │   │   │        ├── Transitions_mocap
-  │   │   │        └── WEIZMANN
-  │   │   └──  smplx_g
-  │   │   │        ├── ACCAD
-  │   │   │        ├── BMLmovi
-  │   │   │        ├── BMLrub
-  │   │   │        ├── CMU
-  │   │   │        ├── CNRS
-  │   │   │        ├── DanceDB
-  │   │   │        ├── DFaust
-  │   │   │        ├── EKUT
-  │   │   │        ├── EyesJapanDataset
-  │   │   │        ├── GRAB
-  │   │   │        ├── HDM05
-  │   │   │        ├── HUMAN4D
-  │   │   │        ├── HumanEva
-  │   │   │        ├── KIT
-  │   │   │        ├── MoSh
-  │   │   │        ├── PosePrior
-  │   │   │        ├── SFU
-  │   │   │        ├── SOMA
-  │   │   │        ├── SSM
-  │   │   │        ├── TCDHands
-  │   │   │        ├── TotalCapture
-  │   │   │        ├── Transitions
-  │   │   │        └── WEIZMANN
-  │   ├── HumanML3D
-  │   │   ├── HumanML3D
-  │   │   │   ├──...
-  │   │   └── index.csv
-  ```
-</details>
+  <summary> 
+  Project folder structure of separately downloaded data:
+  </summary>
+  <details>
+  
+    ```
+    ./
+    ├── data
+    │   ├── smplx_lockedhead_20230207
+    │   │   └── models_lockedhead
+    │   │       ├── smplh
+    │   │       │   ├── SMPLH_FEMALE.pkl
+    │   │       │   └── SMPLH_MALE.pkl
+    │   │       └── smplx
+    │   │           ├── SMPLX_FEMALE.npz
+    │   │           ├── SMPLX_MALE.npz
+    │   │           └── SMPLX_NEUTRAL.npz
+    │   ├── amass
+    │   │   ├──  babel-teach
+    │   │   │        ├── train.json
+    │   │   │        └── val.json
+    │   │   ├──  smplh_g
+    │   │   │        ├── ACCAD
+    │   │   │        ├── BioMotionLab_NTroje
+    │   │   │        ├── BMLhandball
+    │   │   │        ├── BMLmovi
+    │   │   │        ├── CMU
+    │   │   │        ├── CNRS
+    │   │   │        ├── DanceDB
+    │   │   │        ├── DFaust_67
+    │   │   │        ├── EKUT
+    │   │   │        ├── Eyes_Japan_Dataset
+    │   │   │        ├── GRAB
+    │   │   │        ├── HUMAN4D
+    │   │   │        ├── HumanEva
+    │   │   │        ├── KIT
+    │   │   │        ├── MPI_HDM05
+    │   │   │        ├── MPI_Limits
+    │   │   │        ├── MPI_mosh
+    │   │   │        ├── SFU
+    │   │   │        ├── SOMA
+    │   │   │        ├── SSM_synced
+    │   │   │        ├── TCD_handMocap
+    │   │   │        ├── TotalCapture
+    │   │   │        ├── Transitions_mocap
+    │   │   │        └── WEIZMANN
+    │   │   └──  smplx_g
+    │   │   │        ├── ACCAD
+    │   │   │        ├── BMLmovi
+    │   │   │        ├── BMLrub
+    │   │   │        ├── CMU
+    │   │   │        ├── CNRS
+    │   │   │        ├── DanceDB
+    │   │   │        ├── DFaust
+    │   │   │        ├── EKUT
+    │   │   │        ├── EyesJapanDataset
+    │   │   │        ├── GRAB
+    │   │   │        ├── HDM05
+    │   │   │        ├── HUMAN4D
+    │   │   │        ├── HumanEva
+    │   │   │        ├── KIT
+    │   │   │        ├── MoSh
+    │   │   │        ├── PosePrior
+    │   │   │        ├── SFU
+    │   │   │        ├── SOMA
+    │   │   │        ├── SSM
+    │   │   │        ├── TCDHands
+    │   │   │        ├── TotalCapture
+    │   │   │        ├── Transitions
+    │   │   │        └── WEIZMANN
+    │   ├── HumanML3D
+    │   │   ├── HumanML3D
+    │   │   │   ├──...
+    │   │   └── index.csv
+    ```
+  </details>
 
 ## Visualization 
 * We use `pyrender` for interactive visualization of generated motions by default. Please refer to [pyrender viewer](https://pyrender.readthedocs.io/en/latest/generated/pyrender.viewer.Viewer.html) for the usage of the interactive viewer, such as rotating, panning, and zooming.
