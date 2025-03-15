@@ -1,6 +1,7 @@
-## DartControl: A Diffusion-Based Autoregressive Motion Model for Real-Time Text-Driven Motion Control (ICLR 2025, Spotlight)
+# DartControl
+## A Diffusion-Based Autoregressive Motion Model for Real-Time Text-Driven Motion Control (ICLR 2025, Spotlight)
 
-### [[website](https://zkf1997.github.io/DART/)] [[paper](https://arxiv.org/abs/2410.05260)] 
+### [[website](https://zkf1997.github.io/DART/)] | [[paper](https://arxiv.org/abs/2410.05260)] 
 
 
 https://github.com/user-attachments/assets/b26e95e7-4af0-4548-bdca-8f361594951c
