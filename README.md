@@ -2,7 +2,7 @@
 
 [[website](https://zkf1997.github.io/DART/)] [[paper](https://arxiv.org/abs/2410.05260)] 
 
-https://zkf1997.github.io/DART/videos/teaser.mp4
+[teaser](https://zkf1997.github.io/DART/videos/teaser.mp4)
 
 # Updates
 This repository is under construction and the documentations for the following for will be updated.  
