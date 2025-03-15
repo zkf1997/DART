@@ -1,0 +1,4 @@
+fps: 30
+history_length: 2
+future_length: 16
+num_primitive: 4
