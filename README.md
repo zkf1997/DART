@@ -2,7 +2,11 @@
 
 [[website](https://zkf1997.github.io/DART/)] [[paper](https://arxiv.org/abs/2410.05260)] 
 
-[teaser](https://zkf1997.github.io/DART/videos/teaser.mp4)
+
+
+https://github.com/user-attachments/assets/b26e95e7-4af0-4548-bdca-8f361594951c
+
+
 
 # Updates
 This repository is under construction and the documentations for the following for will be updated.  
@@ -122,7 +126,9 @@ Project folder structure of separately downloaded data:
   
   Import demonstration video:
 
-  ./assets/import.mp4
+
+https://github.com/user-attachments/assets/a15fc9d6-507e-4521-aa3f-64b2db8c0252
+
 
   </details>
 
@@ -138,7 +144,9 @@ source ./demos/run_demo.sh
 This will open an interactive viewer and a command-line interface for text input. You can input text prompts and the model will generate the corresponding motion sequence on the fly.
 A demonstration video is shown below:
 
-https://zkf1997.github.io/DART/videos/0927.mp4
+
+https://github.com/user-attachments/assets/ce84ab14-4b3e-42bd-8a8b-db721ee108e3
+
 
 
 ## Headless Text-Conditioned Motion Composition 
