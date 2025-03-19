@@ -158,13 +158,8 @@ def rollout(text_prompt, denoiser_args, denoiser_model, vae_args, vae_model, dif
             num_rollout = int(num_rollout)
             for _ in range(num_rollout):
                 texts.append(action)
-        # action, num_rollout = text_prompt.split('*')
-        # num_rollout = int(num_rollout)
-        # for _ in range(num_rollout):
-        #     texts.append(action)
     all_text_embedding = encode_text(dataset.clip_model, texts, force_empty_zero=True).to(dtype=torch.float32,
                                                                                       device=device)
-    # primitive_utility = PrimitiveUtility(device=device, dtype=torch.float32)
     primitive_utility = dataset.primitive_utility
     print('body_type:', primitive_utility.body_type)
 
@@ -174,8 +169,6 @@ def rollout(text_prompt, denoiser_args, denoiser_model, vae_args, vae_model, dif
         filename = text_prompt[:40].replace(' ', '_').replace('.', '') + '_' + filename
     if rollout_args.respacing != '':
         filename = f'{rollout_args.respacing}_{filename}'
-    # if rollout_args.smooth:
-    #     filename = f'smooth_{filename}'
     if rollout_args.zero_noise:
         filename = f'zero_noise_{filename}'
     if rollout_args.use_predicted_joints:
@@ -194,7 +187,6 @@ def rollout(text_prompt, denoiser_args, denoiser_model, vae_args, vae_model, dif
         'betas': betas[:, 0, :],
         'gender': gender,
     })
-    # print(input_motions, model_kwargs)
     input_motions = input_motions.to(device)  # [B, D, 1, T]
     motion_tensor = input_motions.squeeze(2).permute(0, 2, 1)  # [B, T, D]
     history_motion_gt = motion_tensor[:, :history_length, :]  # [B, H, D]
@@ -232,8 +224,6 @@ def rollout(text_prompt, denoiser_args, denoiser_model, vae_args, vae_model, dif
             noise=torch.zeros_like(guidance_param) if rollout_args.zero_noise else None,
             const_noise=False,
         )  # [B, T=1, D]
-        # x_start_pred = x_start_pred.clamp(min=-3, max=3)
-        # print('x_start_pred:', x_start_pred.mean(), x_start_pred.std(), x_start_pred.min(), x_start_pred.max())
         latent_pred = x_start_pred.permute(1, 0, 2)  # [T=1, B, D]
         future_motion_pred = vae_model.decode(latent_pred, history_motion, nfuture=future_length,
                                                    scale_latent=denoiser_args.rescale_latent)  # [B, F, D], normalized
@@ -249,9 +239,6 @@ def rollout(text_prompt, denoiser_args, denoiser_model, vae_args, vae_model, dif
             joints = future_feature_dict['joints'].reshape(batch_size, -1, 22, 3)  # [B, T, 22, 3]
             joints = torch.einsum('bij,btkj->btki', transf_rotmat, joints) + transf_transl.unsqueeze(1)
             min_height = joints[:, :, :, 2].amin(dim=-1)  # [B, T]
-            # joints[:, :, :, 2] -=  min_height.unsqueeze(-1)
-            # future_feature_dict['joints'] = joints.reshape(batch_size, -1, 66)
-            # future_feature_dict['transl'][:, :, 2] -= min_height
             transl_floor = torch.zeros(batch_size, joints.shape[1], 3, device=device, dtype=torch.float32)  # [B, T, 3]
             transl_floor[:, :, 2] = - min_height
             future_feature_dict['transl'] += transl_floor
@@ -361,7 +348,6 @@ if __name__ == '__main__':
     # load initial seed dataset
     dataset = SinglePrimitiveDataset(cfg_path=vae_args.data_args.cfg_path,  # cfg path from model checkpoint
                                      dataset_path=vae_args.data_args.data_dir,  # dataset path from model checkpoint
-                                     # sequence_path=f'./data/stand.pkl',
                                      body_type=vae_args.data_args.body_type,
                                      sequence_path=f'./data/stand.pkl' if rollout_args.dataset == 'babel' else f'./data/stand_20fps.pkl',
                                      batch_size=rollout_args.batch_size,

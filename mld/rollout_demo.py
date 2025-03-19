@@ -178,8 +178,6 @@ def rollout(denoiser_args, denoiser_model, vae_args, vae_model, diffusion, datas
         noise=torch.zeros_like(guidance_param) if rollout_args.zero_noise else None,
         const_noise=False,
     )  # [B, T=1, D]
-    # x_start_pred = x_start_pred.clamp(min=-3, max=3)
-    # print('x_start_pred:', x_start_pred.mean(), x_start_pred.std(), x_start_pred.min(), x_start_pred.max())
     latent_pred = x_start_pred.permute(1, 0, 2)  # [T=1, B, D]
     future_motion_pred = vae_model.decode(latent_pred, history_motion_normalized, nfuture=future_length,
                                                scale_latent=denoiser_args.rescale_latent)  # [B, F, D], normalized
@@ -279,12 +277,9 @@ def start():
 
     input_thread = threading.Thread(target=read_input)
     input_thread.start()
-    # generate_thread = threading.Thread(target=generate)
-    # generate_thread.start()
     sleep_time = 1 / 30.0
     global frame_idx
     while True:
-        # print(f"frame_idx: {frame_idx}")
         vertices, joints, faces = get_body()
         body_mesh = trimesh.Trimesh(vertices=vertices, faces=faces)
         viewer.render_lock.acquire()
@@ -304,14 +299,11 @@ def start():
         if text_prompt.lower() == "exit":
             break
         if frame_idx >= motion_tensor.shape[1]:
-            # t1 = time.time()
             rollout(denoiser_args, denoiser_model, vae_args, vae_model, diffusion, dataset, rollout_args)
-            # print('generate time:', time.time() - t1)
         time.sleep(sleep_time)
 
     viewer.close_external()
     input_thread.join()
-    # generate_thread.join()
 
 if __name__ == '__main__':
     rollout_args = tyro.cli(RolloutArgs)
@@ -364,7 +356,6 @@ if __name__ == '__main__':
         'betas': betas[:, 0, :],
         'gender': gender,
     })
-    # print(input_motions, model_kwargs)
     input_motions = input_motions.to(device)  # [B, D, 1, T]
     motion_tensor = input_motions.squeeze(2).permute(0, 2, 1)  # [B, T, D]
     motion_tensor = dataset.denormalize(motion_tensor[:, :history_length, :])

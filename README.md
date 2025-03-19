@@ -23,11 +23,10 @@ Setup conda env:
 conda env create -f environment.yml
 conda activate DART
 ```
-<summary>Tested system:</summary>
-<details>
+Tested system:
+
 Our experiments and performance profiling are conducted on a workstation with single RTX 4090
 GPU, intel i7-13700K CPU, 64GiB memory. The workstation runs with Ubuntu 22.04.4 LTS system.
-</details>
 
 ## Data and Model Checkpoints
 * Please download this [link](https://drive.google.com/drive/folders/1vJg3GFVPT6kr6cA0HrQGmiAEBE2dkaps?usp=drive_link) containing model checkpoints and necessary data, extract and merge it to the project folder.
@@ -118,7 +117,8 @@ GPU, intel i7-13700K CPU, 64GiB memory. The workstation runs with Ubuntu 22.04.4
 
 ## Visualization 
 * We use `pyrender` for interactive visualization of generated motions by default. Please refer to [pyrender viewer](https://pyrender.readthedocs.io/en/latest/generated/pyrender.viewer.Viewer.html) for the usage of the interactive viewer, such as rotating, panning, and zooming.
-* We also support exporting the generated motions and visualize in [Blender](https://www.blender.org/) for advanced rendering. To import one motion sequence into blender, please first install the [SMPL-X Blender Add-on](https://gitlab.tuebingen.mpg.de/jtesch/smplx_blender_addon#installation), and use the "add animation" feature as shown in this video. You can use the space key to start/stop playing animation in Blender.
+* The [visualization script](./visualize/vis_seq.py) can render a generated sequence by specifying the `seq_path` argument. It also supports several optional functions, such as multi-sequence visualization, interactive play controlled using keyboards, and automatic body-following camera. More details of the configurable arguments can be found in the vis script.
+* We also support exporting the generated motions as `npz` files and visualize in [Blender](https://www.blender.org/) for advanced rendering. To import one motion sequence into blender, please first install the [SMPL-X Blender Add-on](https://gitlab.tuebingen.mpg.de/jtesch/smplx_blender_addon#installation), and use the "add animation" feature as shown in this video. You can use the space key to start/stop playing animation in Blender.
   <summary>Demonstration of importing motion into Blender:
   </summary>
   
@@ -139,6 +139,7 @@ These applications include motion in-betweening, waypoint goal reaching, and hum
 source ./demos/run_demo.sh
 ```
 This will open an interactive viewer and a command-line interface for text input. You can input text prompts and the model will generate the corresponding motion sequence on the fly.
+The model is trained on the BABEL dataset, which describes motions using verbs or phrases. The action coverage in the dataset can be found [here](https://babel.is.tue.mpg.de/explore.html). 
 A demonstration video is shown below:
 
 https://github.com/user-attachments/assets/ce84ab14-4b3e-42bd-8a8b-db721ee108e3
