@@ -153,7 +153,7 @@ https://github.com/user-attachments/assets/ce84ab14-4b3e-42bd-8a8b-db721ee108e3
 ## Headless Text-Conditioned Motion Composition 
 We offer a headless script for text-conditioned motion composition, enabling users to generate motions from a timeline of actions defined via text prompts.
 The text prompt follows the format:  
-**`action_1*num_1, action_2*num_2, ..., action_n*num_n`**  
+**`action_1*num_1,action_2*num_2,...,action_n*num_n`**  
 where:  
 - **`action_x`**: A text description of the action (e.g., "walk forward," "turn left").  
 - **`num_x`**: The duration of the action, measured in **motion primitives** (each primitive corresponds to 8 frames).  
