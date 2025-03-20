@@ -116,8 +116,12 @@ GPU, intel i7-13700K CPU, 64GiB memory. The workstation runs with Ubuntu 22.04.4
   </details>
 
 ## Visualization 
+
+### Pyrender Viewer
 * We use `pyrender` for interactive visualization of generated motions by default. Please refer to [pyrender viewer](https://pyrender.readthedocs.io/en/latest/generated/pyrender.viewer.Viewer.html) for the usage of the interactive viewer, such as rotating, panning, and zooming.
-* The [visualization script](./visualize/vis_seq.py) can render a generated sequence by specifying the `seq_path` argument. It also supports several optional functions, such as multi-sequence visualization, interactive play controlled using keyboards, and automatic body-following camera. More details of the configurable arguments can be found in the vis script.
+* The [visualization script](./visualize/vis_seq.py) can render a generated sequence by specifying the `seq_path` argument. It also supports several optional functions, such as multi-sequence visualization, interactive play with frame forward/backward control using keyboards, and automatic body-following camera. More details of the configurable arguments can be found in the [vis script](https://github.com/zkf1997/DART/blob/7c1c922ae08f98b507eb7bdcc2e8029ed82e3b64/visualize/vis_seq.py#L375).
+
+### Blender Visualization
 * We also support exporting the generated motions as `npz` files and visualize in [Blender](https://www.blender.org/) for advanced rendering. To import one motion sequence into blender, please first install the [SMPL-X Blender Add-on](https://gitlab.tuebingen.mpg.de/jtesch/smplx_blender_addon#installation), and use the "add animation" feature as shown in this video. You can use the space key to start/stop playing animation in Blender.
   <summary>Demonstration of importing motion into Blender:
   </summary>
@@ -147,6 +151,22 @@ https://github.com/user-attachments/assets/ce84ab14-4b3e-42bd-8a8b-db721ee108e3
 
 
 ## Headless Text-Conditioned Motion Composition 
+We offer a headless script for text-conditioned motion composition, enabling users to generate motions from a timeline of actions defined via text prompts.
+The text prompt follows the format:  
+**`action_1*num_1, action_2*num_2, ..., action_n*num_n`**  
+where:  
+- **`action_x`**: A text description of the action (e.g., "walk forward," "turn left").  
+- **`num_x`**: The duration of the action, measured in **motion primitives** (each primitive corresponds to 8 frames).  
+
+You can run the following command to generate example motions of walking in circles:
+```
+source ./demos/rollout.sh
+```
+We also provide some additional **example text prompts** which are commented out in this [file](./demos/rollout.sh).The output directory of generated motions will be displayed in the command line. The generated motions can be visualized using the [pyrender viewer](#pyrender-viewer) as follows:
+```
+python -m visualize.vis_seq --add_floor 1 --translate_body 1 --seq_path './mld_denoiser/mld_fps_clip_repeat_euler/checkpoint_300000/rollout/walk_in_circles*20_guidance5.0_seed0/*.pkl' 
+```
+We refer to the [vis script](https://github.com/zkf1997/DART/blob/7c1c922ae08f98b507eb7bdcc2e8029ed82e3b64/visualize/vis_seq.py#L375) for detailed visualization configuration. The output directory also contains the exported motion sequences as `npz` files for [Blender visualization](#blender-visualization).
  
 ## Text-Conditioned Motion in-betweening
 

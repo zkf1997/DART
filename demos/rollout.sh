@@ -3,14 +3,13 @@ guidance=5.0
 export_smpl=1
 zero_noise=0
 batch_size=4
-use_predicted_joints=1
+use_predicted_joints=0
 dataset='babel'
 fix_floor=0
 
 text_prompt='walk in circles*20'
-#text_prompt='sidestep left*20'
 #text_prompt='walk backwards*20'
-#text_prompt='dance*20'
+#text_prompt='sidestep left*20'
 #text_prompt='crawl*20'
 #text_prompt='climb down stairs*20'
 #text_prompt='wave hands*10,walk forward*5,cartwheel*8,walk forward*5,turn left*3,sit down*6,stand up*4,hop on left leg*10,pace in circle*10,dance*12,stand*5,wave right hand*10'

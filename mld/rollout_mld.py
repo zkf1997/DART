@@ -42,7 +42,7 @@ class RolloutArgs:
     seed: int = 0
     torch_deterministic: bool = True
     device: str = "cuda"
-    batch_size: int = 4
+
     save_dir = None
     dataset: str = 'babel'
 
@@ -50,11 +50,24 @@ class RolloutArgs:
     respacing: str = ''
 
     text_prompt: str = ''
+
+    batch_size: int = 4
+    """batch size for rollout generation"""
+
     guidance_param: float = 1.0
+    """classifier-free guidance parameter for diffusion sampling"""
+
     export_smpl: int = 0
+    """if set to 1, export smplx sequences as npz files for blender visualization"""
+
     zero_noise: int = 0
+    """if set to 1, use zero init noise for sampling"""
+
     use_predicted_joints: int = 0
+    """if set to 1, use predicted joints from models without blending with smplx regressed joints. Setting to 1 will slightly accelerate the rollout process, while setting to 0 provides additional ensurance that the joints form valid smplx bodies"""
+
     fix_floor: int = 0
+    """if set to one, fix the lowest joint to be always on the floor. This can help to ensure floor contact in long sequence generation. However, this is not applicable to actions requiring getting off the floor, such as jumping or climbing stairs"""
 
 
 class ClassifierFreeWrapper(nn.Module):
