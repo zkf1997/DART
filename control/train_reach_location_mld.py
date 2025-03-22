@@ -430,13 +430,7 @@ if __name__ == "__main__":
         writer.add_scalar("losses/clipfrac", np.mean(clipfracs), global_step)
         writer.add_scalar("losses/explained_variance", explained_var, global_step)
         writer.add_scalar("charts/SPS", int(global_step / (time.time() - start_time)), global_step)
-        # current_time = time.time()
-        # print("SPS:", int(global_step / (current_time - start_time)))
-        # print('rollout time:', rollout_time - t1, (rollout_time - t1) / (current_time - t1))
-        # print('train time:', time.time() - rollout_time)
 
-        # if args.save_model and iteration % 100 == 0:
-            # model_path = args.save_dir / f"model.pth"
         if args.save_model and iteration % args.env_args.export_interval == 0:
             model_path = args.save_dir / f"iter_{iteration}.pth"
             torch.save(agent.state_dict(), model_path)
