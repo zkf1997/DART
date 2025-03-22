@@ -55,7 +55,8 @@ class OptimArgs:
     zero_noise: int = 0
     use_predicted_joints: int = 0
     batch_size: int = 1
-    seed_type: str= 'gt'
+    result_dir: str = 'inbetween'
+    seed_type: str= 'history'
 
     optim_lr: float = 0.01
     optim_steps: int = 300
@@ -117,7 +118,7 @@ def optimize(text_prompt, canonicalized_primitive_dict, goal_joints, joints_mask
     if optim_args.use_predicted_joints:
         filename = f'use_pred_joints_{filename}'
     filename = f'scale{optim_args.init_noise_scale}_floor{optim_args.weight_floor}_jerk{optim_args.weight_jerk}_{filename}'
-    out_path = out_path / f'{optim_args.seed_type}seed' / filename
+    out_path = out_path / optim_args.result_dir / f'{optim_args.seed_type}seed' / filename
     out_path.mkdir(parents=True, exist_ok=True)
 
     batch = dataset.get_batch(batch_size=optim_args.batch_size)
@@ -259,7 +260,11 @@ def optimize(text_prompt, canonicalized_primitive_dict, goal_joints, joints_mask
         'joints': canonicalized_primitive_dict['joints'][0],
         'history_length': history_length,
         'future_length': future_length,
+        'mocap_framerate': dataset.target_fps,
     }
+    if optim_args.seed_type == 'history':
+        for key in ['betas', 'transl', 'global_orient', 'body_pose', 'joints']:
+            sequence[key][history_length:-1] = sequence[key][history_length]
     tensor_dict_to_device(sequence, 'cpu')
     with open(os.path.join(out_path, f'input.pkl'), 'wb') as f:
         pickle.dump(sequence, f)
@@ -275,6 +280,7 @@ def optimize(text_prompt, canonicalized_primitive_dict, goal_joints, joints_mask
             'joints': motion_sequences['joints'][idx, start_idx:end_idx + 1],
             'history_length': history_length,
             'future_length': future_length,
+            'mocap_framerate': dataset.target_fps,
         }
         tensor_dict_to_device(sequence, 'cpu')
         with open(out_path / f'sample_{idx}.pkl', 'wb') as f:

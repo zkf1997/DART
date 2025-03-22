@@ -38,9 +38,8 @@ def export(feat_p, start_frame, end_frame, texts, output_path, output_mode='defa
                                       "_")  # set replace count to string length, so all will be replaced
     seq = os.path.join(raw_dataset_path, file_path)
     data = dict(np.load(seq, allow_pickle=True))
-    # downsample_rate = 120 // target_fps
-    print(feat_p, 'fps ', data['mocap_framerate'].item())
-    downsample_rate = int(data['mocap_framerate'].item() // target_fps)
+    frame_rate = data['mocap_frame_rate'].item() if body_type == 'smplx' else data['mocap_framerate']
+    downsample_rate = int(frame_rate // target_fps)
     ## read data and downsample
     transl_all = data['trans'][::downsample_rate]
     pose_all = data['poses'][::downsample_rate]
@@ -87,9 +86,9 @@ def export(feat_p, start_frame, end_frame, texts, output_path, output_mode='defa
 history_length = 2
 # target_fps = 30
 # body_type = 'smplx'
-# output_mode = 'default'
 target_fps = 20
 body_type = 'smplh'
+# output_mode = 'default'
 output_mode = '1f'
 export_path = Path(f'./data/opt_eval_{target_fps}fps_{body_type}_{output_mode}')
 raw_dataset_path = '/home/kaizhao/dataset/amass/smplx_g' if body_type == 'smplx' else '/home/kaizhao/dataset/amass/smplh_g'

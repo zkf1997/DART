@@ -120,6 +120,7 @@ GPU, intel i7-13700K CPU, 64GiB memory. The workstation runs with Ubuntu 22.04.4
 ### Pyrender Viewer
 * We use `pyrender` for interactive visualization of generated motions by default. Please refer to [pyrender viewer](https://pyrender.readthedocs.io/en/latest/generated/pyrender.viewer.Viewer.html) for the usage of the interactive viewer, such as rotating, panning, and zooming.
 * The [visualization script](./visualize/vis_seq.py) can render a generated sequence by specifying the `seq_path` argument. It also supports several optional functions, such as multi-sequence visualization, interactive play with frame forward/backward control using keyboards, and automatic body-following camera. More details of the configurable arguments can be found in the [vis script](https://github.com/zkf1997/DART/blob/7c1c922ae08f98b507eb7bdcc2e8029ed82e3b64/visualize/vis_seq.py#L375).
+* The script can be slow when visualizing multiple humans together. You can choose to visualize only one human at a time by setting `--max_seq 1` in the command line, or use the blender visualization described below which is several times more efficient.
 
 ### Blender Visualization
 * We also support exporting the generated motions as `npz` files and visualize in [Blender](https://www.blender.org/) for advanced rendering. To import one motion sequence into blender, please first install the [SMPL-X Blender Add-on](https://gitlab.tuebingen.mpg.de/jtesch/smplx_blender_addon#installation), and use the "add animation" feature as shown in this video. You can use the space key to start/stop playing animation in Blender.
@@ -169,13 +170,87 @@ python -m visualize.vis_seq --add_floor 1 --translate_body 1 --seq_path './mld_d
 We refer to the [vis script](https://github.com/zkf1997/DART/blob/7c1c922ae08f98b507eb7bdcc2e8029ed82e3b64/visualize/vis_seq.py#L375) for detailed visualization configuration. The output directory also contains the exported motion sequences as `npz` files for [Blender visualization](#blender-visualization).
  
 ## Text-Conditioned Motion in-betweening
+We provide a script to generate motions between two keyframes conditioned on text prompts.
+The keyframes and the duration of inbetweening is specified using a SMPL parameter sequence via `--optim_input` while the text prompt is specified using `--text_prompt`.
+The script offers two modes, selectable via the `--seed_type` argument: `repeat` and `history`. These modes are designed to handle scenarios where either a single start keyframe or multiple start keyframes are provided. When multiple start keyframes are available, we aim to ensure velocity consistency in addition to maintaining initial location consistency.
+* Repeat mode: The first frame of the input sequence is the start keyframe and the last frame is the goal keyframe, the rest frames are the repeat padding of the first frame. The output sequence length equals to the input sequence length.
+* History mode: The first three frames of the input sequence serve as start keyframes to provide velocity context, and the last frame is the goal keyframe. The remaining frames can be filled using zero-padding or repeat-padding.
+
+We show an example of in-betweening "pace in circles" between two keyframes:
+```
+source ./demos/inbetween_babel.sh
+```
+The generated sequences can be visualized using the commands below.
+The white bodies represent the keyframes for reference, while the colored bodies depict the generated results. 
+To better assess goal keyframe reaching accuracy, you can enable **interactive play mode** by adding `--interactive 1` and pressing `a` to display only the last frame.
+* Repeat mode:
+  ```
+  python -m visualize.vis_seq --add_floor 1 --body_type smplx --seq_path './mld_denoiser/mld_fps_clip_repeat_euler/checkpoint_300000/optim/inbetween/repeatseed/scale0.1_floor0.0_jerk0.0_use_pred_joints_ddim10_pace_in_circles*15_guidance5.0_seed0/*.pkl'
+  ```
+  
+* History mode:
+  ```
+  python -m visualize.vis_seq --add_floor 1 --body_type smplx --seq_path './mld_denoiser/mld_fps_clip_repeat_euler/checkpoint_300000/optim/inbetween/historyseed/scale0.1_floor0.0_jerk0.0_use_pred_joints_ddim10_pace_in_circles*15_guidance5.0_seed0/*.pkl'
+  ``` 
+
+You can easily test custom in-betweening by customizing `--optim_input` and `--text_prompt`. The input SMPL sequence should include the attributes `gender, betas, transl, global_orient, body_pose`. Example sequences can be found [here](./data/inbetween/pace_in_circles).
+
+<summary>Inbetweening using model trained on the HML3D dataset:</summary> 
+<details>  
+
+In addition to inbetweening with model trained on the BABEL dataset as shown above, we provide a script for inbetweening using a model trained on the HML3D dataset [here](./demos/inbetween_hml.sh). Please note: 
+
+- The text prompt style in HML3D differs from BABEL.
+- HML3D assumes **20 fps** motions, whereas BABEL uses **30 fps**.
+- When visualizing HML3D results with the visualization script, please add `--body_type smplh` to specify the body type, as HML3D utilizes **SMPL-H** bodies.
+</details>
+
+
+
+
+
+
+
+
+
+
 
 ## Human-Scene Interaction Synthesis
+We provide a script to generate human-scene interaction motions.
+Given an input 3D scene and the text prompts specifying the actions and durations, we control the human to reach the goal joint location starting from an initial pose while adhering to the scene contact and collision constraints.
+We show two examples of climbing downstairs and sitting to a chair in the demo below:
+```
+source ./demos/scene.sh
+```
+The generated sequences can be visualized using:
+```
+python -m visualize.vis_seq --add_floor 0 --seq_path './mld_denoiser/mld_fps_clip_repeat_euler/checkpoint_300000/optim/sit_use_pred_joints_ddim10_guidance5.0_seed0_contact0.1_thresh0.0_collision0.1_jerk0.1/sample_*.pkl'
+```
+```
+python -m visualize.vis_seq --add_floor 0 --seq_path './mld_denoiser/mld_fps_clip_repeat_euler/checkpoint_300000/optim/climb_down_use_pred_joints_ddim10_guidance5.0_seed0_contact0.1_thresh0.0_collision0.1_jerk0.1/sample_*.pkl'
+```
+
+To use a custom 3D scene, you need to first calculate the scene SDF for evaluating human-scene collision and contact constraints.
+Please ensure the 3D scene is z-up and the floor plane has zero height.
+We use [mesh2sdf](https://github.com/wang-ps/mesh2sdf) for SDF calculation, as shown in [this script](./scenes/test_sdf.py).
+Example configuration files for an interaction sequence can be found [here](./data/optim_interaction). We currently initialize the human using a standing pose, with its location and orientation determined by the pelvis, left hip and right hip location specified using `init_joints`.
+The goal joint locations are specified using `goal_joints`. The current [script](./mld/optim_scene_mld.py) only use pelvis as the goal joint, you can modify the goal joints to be another joint or multiple joints.
+You may also tune the optimization parameters to modulate the generation, such as increasing the learning rate to obtain more diverse results, adjusting number of optimization steps to balance quality and speed, and adjusting the loss weights. 
+
 
 [//]: # (## Sparse and Dense Joint locations Control)
 
 ## Text-Conditioned Goal Reaching using Motion Control Policy
-
+We train a motion control policy capable of reaching dynamic goal locations by leveraging locomotion skills specified through text prompts. The motion control policy is trained for three kinds of locomotion: walking, running, and hopping on the left leg. The control policy can generate >300 frames per second.
+we demonstrate how to define a sequence of waypoints to be reached in the [cfg files](./data/test_locomotion).
+You can run the following command to generate example motions of walking to a sequence of goals:
+```
+source ./demos/goal_reach.sh
+```
+The results can be visualized as follows:
+```
+python -m visualize.vis_seq --add_floor 1 --seq_path './policy_train/reach_location_mld/fixtext_repeat_floor100_hop10_skate100/env_test/demo_walk_path0/0.pkl' 
+```
 # Training
 
 [//]: # (## Data Preparation)

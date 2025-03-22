@@ -169,6 +169,7 @@ def vis_primitive_list(primitive_data_list, args):
         camera_node = pyrender.Node(camera=camera, name='camera', matrix=camera_pose)
         scene.add_node(camera_node)
     mocap_framerate = int(primitive_data.get('mocap_framerate', 30))
+    print('fps:', mocap_framerate)
     viewer = pyrender.Viewer(scene, use_raymond_lighting=True, run_in_thread=True,
                              window_title='_'.join(texts),
                              record=False)
