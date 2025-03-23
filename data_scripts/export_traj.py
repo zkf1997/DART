@@ -359,7 +359,7 @@ def export(traj_hml3d, traj_canonical, text, joint_idx, frame_idx, save_dir):
     else:
         wpath_meshes = []
         for point_idx in range(traj_canonical.shape[0]):
-            color = int(point_idx / traj_canonical.shape[0] * 255)
+            color = int((point_idx+1) / traj_canonical.shape[0] * 255)
             wpath_mesh = trimesh.creation.uv_sphere(radius=0.02)
             wpath_mesh.vertices += traj_canonical[point_idx]
             wpath_mesh.visual.vertex_colors = np.asarray([color, 0, 0, color])
@@ -398,196 +398,32 @@ def export(traj_hml3d, traj_canonical, text, joint_idx, frame_idx, save_dir):
             'frame_idx': frame_idx,
             'text': text}, f)
 
-fps = 20
-n_frames = 120
-duration = n_frames / fps
-
-text = 'a person walks'
-text_nospace = text.replace(' ', '_')
-save_dir = Path('data/traj_test') / f'frame{n_frames}_{text_nospace}_diagonal'
-traj_hml3d = straight_diagonal_uniform(n_frames, indices=[0, 2], scale=duration * 1, x_offset=0.0, y_offset=0.9, z_offset=0.0)
-traj_canonical = np.dot(traj_hml3d, hml3d_to_canonical.T)
-export(traj_hml3d, traj_canonical, text, joint_idx=0, frame_idx=np.arange(n_frames), save_dir=save_dir)
-
-# text = 'a person walks'
-# text_nospace = text.replace(' ', '_')
-# save_dir = Path('data/traj_test') / f'frame{n_frames}_{text_nospace}_circle'
-# traj_hml3d = circle(n_frames, r=duration * 1 / 2 / np.pi, indices=[0, 2], x_offset=0.0, y_offset=0.9, z_offset=0.0)
-# traj_canonical = np.dot(traj_hml3d, hml3d_to_canonical.T)
-# export(traj_hml3d, traj_canonical, text, joint_idx=0, frame_idx=np.arange(n_frames), save_dir=save_dir)
-#
-# text = 'a person walks'
-# text_nospace = text.replace(' ', '_')
-# save_dir = Path('data/traj_test') / f'frame{n_frames}_{text_nospace}_square'
-# traj_hml3d = square(n_frames, scale=duration * 1 / 4, indices=[0, 2], x_offset=0.0, y_offset=0.9, z_offset=0.0)
-# traj_canonical = np.dot(traj_hml3d, hml3d_to_canonical.T)
-# export(traj_hml3d, traj_canonical, text, joint_idx=0, frame_idx=np.arange(n_frames), save_dir=save_dir)
-
-text = 'a person walks'
-text_nospace = text.replace(' ', '_')
-save_dir = Path('data/traj_test') / f'sparse_frame{n_frames}_{text_nospace}_circle'
-frame_idx = np.array([29, 59, 89, 119])
-traj_hml3d = circle(n_frames, r=duration * 1 / 2 / np.pi, indices=[0, 2], x_offset=0.0, y_offset=0.9, z_offset=0.0)
-traj_hml3d = traj_hml3d[frame_idx]
-traj_canonical = np.dot(traj_hml3d, hml3d_to_canonical.T)
-export(traj_hml3d, traj_canonical, text, joint_idx=0, frame_idx=frame_idx, save_dir=save_dir)
-
-text = 'a person walks'
-text_nospace = text.replace(' ', '_')
-save_dir = Path('data/traj_test') / f'sparse_frame{n_frames}_{text_nospace}_square'
-frame_idx = np.array([29, 59, 89, 119])
-traj_hml3d = square(n_frames, scale=duration * 1 / 4, indices=[0, 2], x_offset=0.0, y_offset=0.9, z_offset=0.0)
-traj_hml3d = traj_hml3d[frame_idx]
-traj_canonical = np.dot(traj_hml3d, hml3d_to_canonical.T)
-export(traj_hml3d, traj_canonical, text, joint_idx=0, frame_idx=frame_idx, save_dir=save_dir)
-
-text = 'a person runs'
-text_nospace = text.replace(' ', '_')
-save_dir = Path('data/traj_test') / f'frame{n_frames}_{text_nospace}_diagonal'
-traj_hml3d = straight_diagonal_uniform(n_frames, indices=[0, 2], scale=duration * 2, x_offset=0.0, y_offset=0.9, z_offset=0.0)
-traj_canonical = np.dot(traj_hml3d, hml3d_to_canonical.T)
-export(traj_hml3d, traj_canonical, text, joint_idx=0, frame_idx=np.arange(n_frames), save_dir=save_dir)
-
-text = 'a person is waving his right hand'
-text_nospace = text.replace(' ', '_')
-save_dir = Path('data/traj_test') / f'sparse_frame{n_frames}_{text_nospace}_circle'
-frame_idx = np.array([30, 90])
-traj_hml3d = circle(n_frames, r=0.25, indices=[0, 1], x_offset=-0.2, y_offset=1.6, z_offset=0.2)
-traj_hml3d = traj_hml3d[frame_idx]
-traj_canonical = np.dot(traj_hml3d, hml3d_to_canonical.T)
-export(traj_hml3d, traj_canonical, text, joint_idx=21, frame_idx=frame_idx, save_dir=save_dir)
-
-text = 'a person is waving his right hand'
-text_nospace = text.replace(' ', '_')
-save_dir = Path('data/traj_test') / f'dense_frame{n_frames}_{text_nospace}_circle'
-frame_idx = np.arange(90) + 30
-traj_hml3d = circle(n_frames, r=0.25, indices=[0, 1], x_offset=-0.2, y_offset=1.6, z_offset=0.2)
-traj_hml3d = traj_hml3d[frame_idx]
-traj_canonical = np.dot(traj_hml3d, hml3d_to_canonical.T)
-export(traj_hml3d, traj_canonical, text, joint_idx=21, frame_idx=frame_idx, save_dir=save_dir)
-
-# text = 'a person runs'
-# text_nospace = text.replace(' ', '_')
-# save_dir = Path('data/traj_test') / f'frame{n_frames}_{text_nospace}_circle'
-# traj_hml3d = circle(n_frames, r=duration * 2 / 2 / np.pi, indices=[0, 2], x_offset=0.0, y_offset=0.9, z_offset=0.0)
-# traj_canonical = np.dot(traj_hml3d, hml3d_to_canonical.T)
-# export(traj_hml3d, traj_canonical, text, joint_idx=0, frame_idx=np.arange(n_frames), save_dir=save_dir)
-#
-# text = 'a person runs'
-# text_nospace = text.replace(' ', '_')
-# save_dir = Path('data/traj_test') / f'frame{n_frames}_{text_nospace}_square'
-# traj_hml3d = square(n_frames, scale=duration * 2 / 4, indices=[0, 2], x_offset=0.0, y_offset=0.9, z_offset=0.0)
-# traj_canonical = np.dot(traj_hml3d, hml3d_to_canonical.T)
-# export(traj_hml3d, traj_canonical, text, joint_idx=0, frame_idx=np.arange(n_frames), save_dir=save_dir)
-
-text = 'a person runs in a circle'
-text_nospace = text.replace(' ', '_')
-save_dir = Path('data/traj_test') / f'sparse_frame{n_frames}_{text_nospace}_circle'
-frame_idx = np.array([29, 59, 89, 119])
-traj_hml3d = circle(n_frames, r=duration * 2 / 2 / np.pi, indices=[0, 2], x_offset=0.0, y_offset=0.9, z_offset=0.0)
-traj_hml3d = traj_hml3d[frame_idx]
-traj_canonical = np.dot(traj_hml3d, hml3d_to_canonical.T)
-export(traj_hml3d, traj_canonical, text, joint_idx=0, frame_idx=frame_idx, save_dir=save_dir)
-
-text = 'a person runs'
-text_nospace = text.replace(' ', '_')
-save_dir = Path('data/traj_test') / f'sparse_frame{n_frames}_{text_nospace}_circle'
-frame_idx = np.array([29, 59, 89, 119])
-traj_hml3d = circle(n_frames, r=duration * 2 / 2 / np.pi, indices=[0, 2], x_offset=0.0, y_offset=0.9, z_offset=0.0)
-traj_hml3d = traj_hml3d[frame_idx]
-traj_canonical = np.dot(traj_hml3d, hml3d_to_canonical.T)
-export(traj_hml3d, traj_canonical, text, joint_idx=0, frame_idx=frame_idx, save_dir=save_dir)
-
-text = 'a person runs forward'
-text_nospace = text.replace(' ', '_')
-save_dir = Path('data/traj_test') / f'sparse_frame{n_frames}_{text_nospace}_square'
-frame_idx = np.array([30, 60, 90, 120])
-# traj_hml3d = square(n_frames, scale=duration * 2 / 4, indices=[0, 2], x_offset=0.0, y_offset=0.9, z_offset=0.0)
-# traj_hml3d = traj_hml3d[frame_idx]
-scale = 3
-traj_hml3d = np.array([
-    [0.0, 0.9, scale],
-    [scale, 0.9, scale],
-    [scale, 0.9, 0],
-    [0.0, 0.9, 0.0],
-])
-traj_canonical = np.dot(traj_hml3d, hml3d_to_canonical.T)
-export(traj_hml3d, traj_canonical, text, joint_idx=0, frame_idx=frame_idx, save_dir=save_dir)
-
-
-text = 'A person stands and kicks with his left leg'
-text_nospace = text.replace(' ', '_')
-save_dir = Path('data/traj_test') / f'{text_nospace}'
-frame_idx = np.array([20])
-traj_hml3d = np.array([[0, 1.0, 1.0]])
-traj_canonical = np.dot(traj_hml3d, hml3d_to_canonical.T)
-export(traj_hml3d, traj_canonical, text, joint_idx=10, frame_idx=frame_idx, save_dir=save_dir)
-
-text = 'A person stands and kicks with his right leg'
-text_nospace = text.replace(' ', '_')
-save_dir = Path('data/traj_test') / f'{text_nospace}'
-frame_idx = np.array([20])
-traj_hml3d = np.array([[0, 1.0, 1.0]])
-traj_canonical = np.dot(traj_hml3d, hml3d_to_canonical.T)
-export(traj_hml3d, traj_canonical, text, joint_idx=11, frame_idx=frame_idx, save_dir=save_dir)
-
-text = 'A person hops three times'
-text_nospace = text.replace(' ', '_')
-save_dir = Path('data/traj_test') / f'{text_nospace}'
-frame_idx = np.array([40, 100, 155])
-traj_hml3d = np.array([[0, 0, 1], [0.0, 0, 2], [0.0, 0, 3]])
-traj_canonical = np.dot(traj_hml3d, hml3d_to_canonical.T)
-export(traj_hml3d, traj_canonical, text, joint_idx=11, frame_idx=frame_idx, save_dir=save_dir)
-
-text = 'A person punches'
-text_nospace = text.replace(' ', '_')
-save_dir = Path('data/traj_test') / f'{text_nospace}'
-frame_idx = np.array([40])
-traj_hml3d = np.array([[0, 1.5, 0.5]])
-traj_canonical = np.dot(traj_hml3d, hml3d_to_canonical.T)
-export(traj_hml3d, traj_canonical, text, joint_idx=20, frame_idx=frame_idx, save_dir=save_dir)
-
-
-
 fps = 30
 duration = 6
 n_frames = fps * duration
 response_time = 1.5
 start_frame = int(response_time * fps)
 
-text = 'run forward'
+text = 'wave right hand'
 text_nospace = text.replace(' ', '_')
-save_dir = Path('data/traj_test') / f'fps{fps}_sparse_frame{n_frames}_{text_nospace}_circle'
-frame_idx = np.linspace(0, n_frames - 1, 5).astype(int)[1:]
-frame_idx = frame_idx[frame_idx>=start_frame]
-traj_hml3d = circle(n_frames, r=duration * 2 / 2 / np.pi, indices=[0, 2], x_offset=0.0, y_offset=0.9, z_offset=0.0)
+save_dir = Path('data/traj_test') / f'dense_frame{n_frames}_{text_nospace}_circle'
+frame_idx = np.arange(n_frames - start_frame) + start_frame
+traj_hml3d = circle(n_frames, r=0.25, indices=[0, 1], x_offset=-0.2, y_offset=1.6, z_offset=0.2)
 traj_hml3d = traj_hml3d[frame_idx]
 traj_canonical = np.dot(traj_hml3d, hml3d_to_canonical.T)
-export(traj_hml3d, traj_canonical, text, joint_idx=0, frame_idx=frame_idx, save_dir=save_dir)
+export(traj_hml3d, traj_canonical, text, joint_idx=21, frame_idx=frame_idx, save_dir=save_dir)
 
-text = 'run forward'
+text = 'punch'
 text_nospace = text.replace(' ', '_')
-save_dir = Path('data/traj_test') / f'fps{fps}_sparse_frame{n_frames}_{text_nospace}_square'
-frame_idx = np.linspace(0, n_frames - 1, 5).astype(int)[1:]
-frame_idx = frame_idx[frame_idx>=start_frame]
-traj_hml3d = square(n_frames, scale=duration * 2 / 4, indices=[0, 2], x_offset=0.0, y_offset=0.9, z_offset=0.0)
-traj_hml3d = traj_hml3d[frame_idx]
+save_dir = Path('data/traj_test') / f'sparse_{text_nospace}'
+frame_idx = np.array([45])
+traj_hml3d = np.array([[0, 1.5, 0.5]])
 traj_canonical = np.dot(traj_hml3d, hml3d_to_canonical.T)
-export(traj_hml3d, traj_canonical, text, joint_idx=0, frame_idx=frame_idx, save_dir=save_dir)
+export(traj_hml3d, traj_canonical, text, joint_idx=20, frame_idx=frame_idx, save_dir=save_dir)
 
 text = 'walk'
 text_nospace = text.replace(' ', '_')
-save_dir = Path('data/traj_test') / f'fps{fps}_sparse_frame{n_frames}_{text_nospace}_circle'
-frame_idx = np.linspace(0, n_frames - 1, 5).astype(int)[1:]
-frame_idx = frame_idx[frame_idx>=start_frame]
-traj_hml3d = circle(n_frames, r=duration * 1 / 2 / np.pi, indices=[0, 2], x_offset=0.0, y_offset=0.9, z_offset=0.0)
-traj_hml3d = traj_hml3d[frame_idx]
-traj_canonical = np.dot(traj_hml3d, hml3d_to_canonical.T)
-export(traj_hml3d, traj_canonical, text, joint_idx=0, frame_idx=frame_idx, save_dir=save_dir)
-
-text = 'walk'
-text_nospace = text.replace(' ', '_')
-save_dir = Path('data/traj_test') / f'fps{fps}_sparse_frame{n_frames}_{text_nospace}_square'
+save_dir = Path('data/traj_test') / f'sparse_frame{n_frames}_{text_nospace}_square'
 frame_idx = np.linspace(0, n_frames - 1, 5).astype(int)[1:]
 frame_idx = frame_idx[frame_idx>=start_frame]
 traj_hml3d = square(n_frames, scale=duration * 1 / 4, indices=[0, 2], x_offset=0.0, y_offset=0.9, z_offset=0.0)
@@ -595,29 +431,9 @@ traj_hml3d = traj_hml3d[frame_idx]
 traj_canonical = np.dot(traj_hml3d, hml3d_to_canonical.T)
 export(traj_hml3d, traj_canonical, text, joint_idx=0, frame_idx=frame_idx, save_dir=save_dir)
 
-text = 'run forward'
-text_nospace = text.replace(' ', '_')
-save_dir = Path('data/traj_test') / f'fps{fps}_frame{n_frames}_{text_nospace}_circle'
-frame_idx = np.arange(n_frames)
-frame_idx = frame_idx[frame_idx>=start_frame]
-traj_hml3d = circle(n_frames, r=duration * 3 / 2 / np.pi, indices=[0, 2], x_offset=0.0, y_offset=0.9, z_offset=0.0)
-traj_hml3d = traj_hml3d[frame_idx]
-traj_canonical = np.dot(traj_hml3d, hml3d_to_canonical.T)
-export(traj_hml3d, traj_canonical, text, joint_idx=0, frame_idx=frame_idx, save_dir=save_dir)
-
-text = 'run forward'
-text_nospace = text.replace(' ', '_')
-save_dir = Path('data/traj_test') / f'fps{fps}_frame{n_frames}_{text_nospace}_square'
-frame_idx = np.arange(n_frames)
-frame_idx = frame_idx[frame_idx>=start_frame]
-traj_hml3d = square(n_frames, scale=duration * 3 / 4, indices=[0, 2], x_offset=0.0, y_offset=0.9, z_offset=0.0)
-traj_hml3d = traj_hml3d[frame_idx]
-traj_canonical = np.dot(traj_hml3d, hml3d_to_canonical.T)
-export(traj_hml3d, traj_canonical, text, joint_idx=0, frame_idx=frame_idx, save_dir=save_dir)
-
 text = 'walk'
 text_nospace = text.replace(' ', '_')
-save_dir = Path('data/traj_test') / f'fps{fps}_frame{n_frames}_{text_nospace}_circle'
+save_dir = Path('data/traj_test') / f'dense_frame{n_frames}_{text_nospace}_circle'
 frame_idx = np.arange(n_frames)
 frame_idx = frame_idx[frame_idx>=start_frame]
 traj_hml3d = circle(n_frames, r=duration * 1 / 2 / np.pi, indices=[0, 2], x_offset=0.0, y_offset=0.9, z_offset=0.0)
@@ -625,30 +441,4 @@ traj_hml3d = traj_hml3d[frame_idx]
 traj_canonical = np.dot(traj_hml3d, hml3d_to_canonical.T)
 export(traj_hml3d, traj_canonical, text, joint_idx=0, frame_idx=frame_idx, save_dir=save_dir)
 
-text = 'walk'
-text_nospace = text.replace(' ', '_')
-save_dir = Path('data/traj_test') / f'fps{fps}_frame{n_frames}_{text_nospace}_square'
-frame_idx = np.arange(n_frames)
-frame_idx = frame_idx[frame_idx>=start_frame]
-traj_hml3d = square(n_frames, scale=duration * 1 / 4, indices=[0, 2], x_offset=0.0, y_offset=0.9, z_offset=0.0)
-traj_hml3d = traj_hml3d[frame_idx]
-traj_canonical = np.dot(traj_hml3d, hml3d_to_canonical.T)
-export(traj_hml3d, traj_canonical, text, joint_idx=0, frame_idx=frame_idx, save_dir=save_dir)
 
-
-
-with open('/home/kaizhao/projects/multiskill/data/hml3d/seq_data_zero_male/test.pkl', 'rb') as f:
-    test_data = pickle.load(f)
-
-seq_idx = 79
-motion = test_data[seq_idx]['motion']
-text = test_data[seq_idx]['frame_labels'][1]['proc_label']
-text_nospace = text.replace(' ', '_')
-save_dir = Path('data/traj_test') / f'hml3d_{seq_idx}_{text_nospace}'
-joints = get_joints(motion)  # [T, 22, 3]
-frame_idx = np.arange(min(196, joints.shape[0]))
-joint_idx = 0
-traj_canonical = joints[:, joint_idx]
-traj_hml3d = np.dot(traj_canonical, hml3d_to_canonical)
-traj_hml3d[:, 1] = 0.9
-export(traj_hml3d, traj_canonical, text, joint_idx=joint_idx, frame_idx=frame_idx, save_dir=save_dir)

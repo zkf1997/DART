@@ -86,6 +86,7 @@ class OptimArgs:
     weight_jerk: float = 0.0
     mode: str = 'global'
     init_scale: float = 1.0
+    use_2d_dist: int = 0
 
 def optimize_global(input_path, denoiser_args, denoiser_model, vae_args, vae_model, diffusion, dataset, optim_args):
     device = optim_args.device
@@ -240,7 +241,7 @@ def optimize_global(input_path, denoiser_args, denoiser_model, vae_args, vae_mod
         motion_sequences = rollout(noise)
         goal_joints = joint_traj.unsqueeze(0).repeat(batch_size, 1, 1)  # [B, T, 3]
         gen_joints = motion_sequences['joints'][:, frame_idx, joint_idx, :3]  # [B, T, 3]
-        if joint_idx == 0:
+        if optim_args.use_2d_dist:
             gen_joints = gen_joints[:, :, :2]
             goal_joints = goal_joints[:, :, :2]
         loss_joints = criterion(gen_joints, goal_joints)  # only consider xy plane distance
@@ -256,8 +257,8 @@ def optimize_global(input_path, denoiser_args, denoiser_model, vae_args, vae_mod
         optimizer.step()
         # with torch.no_grad():
         #     noise.clamp_(-4, 4)
-        print(f'noise: mean{noise.mean()} std{noise.std()} min{noise.min()} max{noise.max()}')
-        print(f'[{i}/{optim_steps}] loss: {loss.item()} joints_diff: {loss_joints.item()} jerk: {loss_jerk.item()} floor: {loss_floor.item()} skate: {loss_skate.item()}')
+        # print(f'noise: mean{noise.mean()} std{noise.std()} min{noise.min()} max{noise.max()}')
+        # print(f'[{i}/{optim_steps}] loss: {loss.item()} joints_diff: {loss_joints.item()} jerk: {loss_jerk.item()} floor: {loss_floor.item()} skate: {loss_skate.item()}')
     print(f'[{i}/{optim_steps}] loss: {loss.item()} joints_diff: {loss_joints.item()} jerk: {loss_jerk.item()} floor: {loss_floor.item()} skate: {loss_skate.item()}')
     with open(out_path / f'loss_{loss.item()}.txt', 'w') as f:
         f.write(f'loss: {loss.item()} joints_diff: {loss_joints.item()} jerk: {loss_jerk.item()} floor: {loss_floor.item()} skate: {loss_skate.item()}')
@@ -275,6 +276,7 @@ def optimize_global(input_path, denoiser_args, denoiser_model, vae_args, vae_mod
             'joints': motion_sequences['joints'][idx, :seq_length],
             'history_length': history_length,
             'future_length': future_length,
+            'traj_ply': input_path.parent / 'traj.ply'
         }
         tensor_dict_to_device(sequence, 'cpu')
         with open(out_path / f'sample_{idx}.pkl', 'wb') as f:
@@ -508,6 +510,7 @@ def optimize_stage(input_path, denoiser_args, denoiser_model, vae_args, vae_mode
             'joints': motion_sequences['joints'][idx],
             'history_length': history_length,
             'future_length': future_length,
+            'traj_ply': input_path.parent / 'traj.ply'
         }
         tensor_dict_to_device(sequence, 'cpu')
         with open(out_path / f'sample_{idx}.pkl', 'wb') as f:
@@ -556,7 +559,7 @@ if __name__ == '__main__':
     diffusion = create_gaussian_diffusion(diffusion_args)
 
     # load initial seed dataset
-    seq_path = Path(optim_args.optim_input)
+    # seq_path = Path(optim_args.optim_input)
     dataset = SinglePrimitiveDataset(cfg_path=vae_args.data_args.cfg_path,  # cfg path from model checkpoint
                                      dataset_path=vae_args.data_args.data_dir,  # dataset path from model checkpoint
                                      sequence_path='./data/stand.pkl' if optim_args.fps == 30 else './data/stand_20fps.pkl',

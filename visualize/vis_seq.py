@@ -226,6 +226,20 @@ def vis_primitive_list(primitive_data_list, args):
         scene.add_node(floor_node)
         viewer.render_lock.release()
 
+    if 'traj_ply' in primitive_data and args.vis_traj:
+        traj_ply = trimesh.load(primitive_data['traj_ply'])
+        if args.translate_body:
+            poses = np.stack([np.eye(4) for _ in range(num_sequences)])
+            poses[:, :3, 3] = np.array([[0, 0, seq_idx * 2] for seq_idx in range(num_sequences)])
+            traj_meshes = pyrender.Mesh.from_trimesh(traj_ply, poses=poses, smooth=False)
+            traj_node = pyrender.Node(mesh=traj_meshes, name='traj')
+        else:
+            traj_mesh = pyrender.Mesh.from_trimesh(traj_ply, smooth=False)
+            traj_node = pyrender.Node(mesh=traj_mesh, name='traj')
+        viewer.render_lock.acquire()
+        scene.add_node(traj_node)
+        viewer.render_lock.release()
+
     if 'goal_body' in primitive_data:
         goal_joints = primitive_data['goal_body']['joints'].reshape(22, 3).detach().cpu().numpy()
         bones = []
@@ -381,12 +395,13 @@ if __name__ == '__main__':
     parser.add_argument('--seq_path', type=str, help='path to the sequence pkl files, support regular expression')
     parser.add_argument('--vis_joint', type=int, default=1, help='whether to visualize the joints')
     parser.add_argument('--vis_mesh', type=int, default=1, help='whether to visualize the body mesh')
+    parser.add_argument('--vis_traj', type=int, default=1, help='whether to visualize the traj mesh')
     parser.add_argument('--vis_goal', type=int, default=1, help='whether to visualize the goals')
     parser.add_argument('--add_floor', type=int, default=0, help='whether to add a floor aligned with the first frame lower foot')
     parser.add_argument('--use_pred_joints', type=int, default=0, help='whether to use the predicted joints instead of SMPL model regression')
     parser.add_argument('--translate_body', type=int, default=0, help='if set to 1, translate the different sequences vertically to avoid overlapping')
     parser.add_argument('--follow_camera', type=int, default=0, help='if set to 1, the camera will follow the body automatically')
-    parser.add_argument('--body_type', type=str, default='smplx', help='the type of body to use', choices=['smplx', 'smplh'])
+    parser.add_argument('--body_type', type=str, default='smplx', help='the type of body to use. For generations using HML3D checkpoints, please select smplh.', choices=['smplx', 'smplh'])
     args = parser.parse_args()
     args.device = device
 

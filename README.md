@@ -9,7 +9,7 @@ https://github.com/user-attachments/assets/b26e95e7-4af0-4548-bdca-8f361594951c
 
 
 # Updates
-This repository is under construction and the documentations for the following for will be updated.  
+This repository is under construction and the documentations for the following for will be updated. If you encounter any problems, please do not hesitate to contact us.
 
 - [ ] Setup, generation demos, and visualization
 - [ ] Data preparation and training
@@ -38,82 +38,82 @@ GPU, intel i7-13700K CPU, 64GiB memory. The workstation runs with Ubuntu 22.04.4
   * [BABEL](https://download.is.tue.mpg.de/download.php?domain=teach&resume=1&sfile=babel-data/babel-teach.zip) (Only required for training)
   * [HumanML3D](https://github.com/EricGuo5513/HumanML3D)(Only required for training)
 
-  <summary> 
-  Project folder structure of separately downloaded data:
-  </summary>
-  <details>
   
+  * <details>
+
+    <summary>Project folder structure of separately downloaded data:</summary>
+
     ```
-    ./
-    ├── data
-    │   ├── smplx_lockedhead_20230207
-    │   │   └── models_lockedhead
-    │   │       ├── smplh
-    │   │       │   ├── SMPLH_FEMALE.pkl
-    │   │       │   └── SMPLH_MALE.pkl
-    │   │       └── smplx
-    │   │           ├── SMPLX_FEMALE.npz
-    │   │           ├── SMPLX_MALE.npz
-    │   │           └── SMPLX_NEUTRAL.npz
-    │   ├── amass
-    │   │   ├──  babel-teach
-    │   │   │        ├── train.json
-    │   │   │        └── val.json
-    │   │   ├──  smplh_g
-    │   │   │        ├── ACCAD
-    │   │   │        ├── BioMotionLab_NTroje
-    │   │   │        ├── BMLhandball
-    │   │   │        ├── BMLmovi
-    │   │   │        ├── CMU
-    │   │   │        ├── CNRS
-    │   │   │        ├── DanceDB
-    │   │   │        ├── DFaust_67
-    │   │   │        ├── EKUT
-    │   │   │        ├── Eyes_Japan_Dataset
-    │   │   │        ├── GRAB
-    │   │   │        ├── HUMAN4D
-    │   │   │        ├── HumanEva
-    │   │   │        ├── KIT
-    │   │   │        ├── MPI_HDM05
-    │   │   │        ├── MPI_Limits
-    │   │   │        ├── MPI_mosh
-    │   │   │        ├── SFU
-    │   │   │        ├── SOMA
-    │   │   │        ├── SSM_synced
-    │   │   │        ├── TCD_handMocap
-    │   │   │        ├── TotalCapture
-    │   │   │        ├── Transitions_mocap
-    │   │   │        └── WEIZMANN
-    │   │   └──  smplx_g
-    │   │   │        ├── ACCAD
-    │   │   │        ├── BMLmovi
-    │   │   │        ├── BMLrub
-    │   │   │        ├── CMU
-    │   │   │        ├── CNRS
-    │   │   │        ├── DanceDB
-    │   │   │        ├── DFaust
-    │   │   │        ├── EKUT
-    │   │   │        ├── EyesJapanDataset
-    │   │   │        ├── GRAB
-    │   │   │        ├── HDM05
-    │   │   │        ├── HUMAN4D
-    │   │   │        ├── HumanEva
-    │   │   │        ├── KIT
-    │   │   │        ├── MoSh
-    │   │   │        ├── PosePrior
-    │   │   │        ├── SFU
-    │   │   │        ├── SOMA
-    │   │   │        ├── SSM
-    │   │   │        ├── TCDHands
-    │   │   │        ├── TotalCapture
-    │   │   │        ├── Transitions
-    │   │   │        └── WEIZMANN
-    │   ├── HumanML3D
-    │   │   ├── HumanML3D
-    │   │   │   ├──...
-    │   │   └── index.csv
+      ./
+      ├── data
+      │   ├── smplx_lockedhead_20230207
+      │   │   └── models_lockedhead
+      │   │       ├── smplh
+      │   │       │   ├── SMPLH_FEMALE.pkl
+      │   │       │   └── SMPLH_MALE.pkl
+      │   │       └── smplx
+      │   │           ├── SMPLX_FEMALE.npz
+      │   │           ├── SMPLX_MALE.npz
+      │   │           └── SMPLX_NEUTRAL.npz
+      │   ├── amass
+      │   │   ├──  babel-teach
+      │   │   │        ├── train.json
+      │   │   │        └── val.json
+      │   │   ├──  smplh_g
+      │   │   │        ├── ACCAD
+      │   │   │        ├── BioMotionLab_NTroje
+      │   │   │        ├── BMLhandball
+      │   │   │        ├── BMLmovi
+      │   │   │        ├── CMU
+      │   │   │        ├── CNRS
+      │   │   │        ├── DanceDB
+      │   │   │        ├── DFaust_67
+      │   │   │        ├── EKUT
+      │   │   │        ├── Eyes_Japan_Dataset
+      │   │   │        ├── GRAB
+      │   │   │        ├── HUMAN4D
+      │   │   │        ├── HumanEva
+      │   │   │        ├── KIT
+      │   │   │        ├── MPI_HDM05
+      │   │   │        ├── MPI_Limits
+      │   │   │        ├── MPI_mosh
+      │   │   │        ├── SFU
+      │   │   │        ├── SOMA
+      │   │   │        ├── SSM_synced
+      │   │   │        ├── TCD_handMocap
+      │   │   │        ├── TotalCapture
+      │   │   │        ├── Transitions_mocap
+      │   │   │        └── WEIZMANN
+      │   │   └──  smplx_g
+      │   │   │        ├── ACCAD
+      │   │   │        ├── BMLmovi
+      │   │   │        ├── BMLrub
+      │   │   │        ├── CMU
+      │   │   │        ├── CNRS
+      │   │   │        ├── DanceDB
+      │   │   │        ├── DFaust
+      │   │   │        ├── EKUT
+      │   │   │        ├── EyesJapanDataset
+      │   │   │        ├── GRAB
+      │   │   │        ├── HDM05
+      │   │   │        ├── HUMAN4D
+      │   │   │        ├── HumanEva
+      │   │   │        ├── KIT
+      │   │   │        ├── MoSh
+      │   │   │        ├── PosePrior
+      │   │   │        ├── SFU
+      │   │   │        ├── SOMA
+      │   │   │        ├── SSM
+      │   │   │        ├── TCDHands
+      │   │   │        ├── TotalCapture
+      │   │   │        ├── Transitions
+      │   │   │        └── WEIZMANN
+      │   ├── HumanML3D
+      │   │   ├── HumanML3D
+      │   │   │   ├──...
+      │   │   └── index.csv
     ```
-  </details>
+    </details>
 
 ## Visualization 
 
@@ -124,13 +124,13 @@ GPU, intel i7-13700K CPU, 64GiB memory. The workstation runs with Ubuntu 22.04.4
 
 ### Blender Visualization
 * We also support exporting the generated motions as `npz` files and visualize in [Blender](https://www.blender.org/) for advanced rendering. To import one motion sequence into blender, please first install the [SMPL-X Blender Add-on](https://gitlab.tuebingen.mpg.de/jtesch/smplx_blender_addon#installation), and use the "add animation" feature as shown in this video. You can use the space key to start/stop playing animation in Blender.
-  <summary>Demonstration of importing motion into Blender:
-  </summary>
+ 
   
   <details>
 
-    https://github.com/user-attachments/assets/a15fc9d6-507e-4521-aa3f-64b2db8c0252
+   <summary>Demonstration of importing motion into Blender:</summary>
 
+    https://github.com/user-attachments/assets/a15fc9d6-507e-4521-aa3f-64b2db8c0252
 
   </details>
 
@@ -195,10 +195,10 @@ To better assess goal keyframe reaching accuracy, you can enable **interactive p
 
 You can easily test custom in-betweening by customizing `--optim_input` and `--text_prompt`. The input SMPL sequence should include the attributes `gender, betas, transl, global_orient, body_pose`. Example sequences can be found [here](./data/inbetween/pace_in_circles).
 
-<summary>Inbetweening using model trained on the HML3D dataset:</summary> 
+ 
 <details>  
-
-In addition to inbetweening with model trained on the BABEL dataset as shown above, we provide a script for inbetweening using a model trained on the HML3D dataset [here](./demos/inbetween_hml.sh). Please note: 
+<summary>Using model trained on the HML3D dataset:</summary>
+In addition to inbetweening with the model trained on the BABEL dataset (as demonstrated above), we also provide a script for inbetweening using a model trained on the HML3D dataset [here](./demos/inbetween_hml.sh). While you can generally use the HML3D-trained model for **all optimization-based demos** below, please note the following:
 
 - The text prompt style in HML3D differs from BABEL.
 - HML3D assumes **20 fps** motions, whereas BABEL uses **30 fps**.
@@ -251,6 +251,39 @@ The results can be visualized as follows:
 ```
 python -m visualize.vis_seq --add_floor 1 --seq_path './policy_train/reach_location_mld/fixtext_repeat_floor100_hop10_skate100/env_test/demo_walk_path0/0.pkl' 
 ```
+
+## Sparse and Dense Joint Trajectory Control
+We provide a script to generate motions with **sparse/dense joint trajectory control**.
+Below we demonstrate some examples of controlling hand wrists and 2D pelvis trajectories.
+This script assumes starting from a **standing pose** and the specified joint trajectory needs to be feasible with the starting pose.
+To accommodate this, we set a tolerance period (1.5 seconds in the script) at the start of the sequence. During this period, no trajectory constraints are enforced, allowing sufficient time for the human to transition smoothly and feasibly to the controlled trajectory from the standing pose.
+You can run the following command to generate example motions:
+```
+source ./demos/traj.sh
+```
+The generated sequences can be visualized using the four commands below. 
+The trajectories are visualized as a sequence of spheres, with colors transitioning from dark to red to represent relative time.
+    
+- In the punch example, there is a single trajectory point at 1.5 seconds.
+    
+- In the other three examples, trajectory points are distributed across a range from 1.5 to 6 seconds.
+
+You can find the utility script for creating the example control trajectories [here](./data_scripts/export_traj.py).This script includes definitions for: frame index and location for each control trajectory point, and index of the joint to be controlled.
+```
+python -m visualize.vis_seq --add_floor 1 --translate_body 1 --vis_joint 1 --seq_path './data/traj_test/dense_frame180_walk_circle/mld_optim_global/floor1.0_skate1.0_jerk0.0_use_pred_joints_init1.0_ddim10_guidance5.0_seed0_lr0.05_steps100/*.pkl'
+```
+```
+python -m visualize.vis_seq --add_floor 1 --translate_body 1 --vis_joint 1 --seq_path './data/traj_test/sparse_frame180_walk_square/mld_optim_global/floor1.0_skate1.0_jerk0.0_use_pred_joints_init1.0_ddim10_guidance5.0_seed0_lr0.05_steps100/*.pkl'
+```
+```
+python -m visualize.vis_seq --add_floor 1 --translate_body 1 --vis_joint 1 --seq_path './data/traj_test/dense_frame180_wave_right_hand_circle/mld_optim_global/floor1.0_skate1.0_jerk0.0_use_pred_joints_init1.0_ddim10_guidance5.0_seed0_lr0.05_steps100/*.pkl'
+```
+```
+python -m visualize.vis_seq --add_floor 1 --translate_body 1 --vis_joint 1 --seq_path './data/traj_test/sparse_punch/mld_optim_global/floor1.0_skate1.0_jerk0.0_use_pred_joints_init1.0_ddim10_guidance5.0_seed0_lr0.05_steps100/*.pkl'
+```
+You can test with custom trajectories by setting `--input_path` to your custom control trajectories.
+If you have ground truth initial bodies and joint trajectories from dataset, you can modify the script to use initial bodies from dataset instead of the rest standing pose similar to the [inbetweening script](./mld/optim_mld.py).
+
 # Training
 
 [//]: # (## Data Preparation)
