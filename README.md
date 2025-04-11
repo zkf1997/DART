@@ -366,8 +366,9 @@ By default, we provide commands for training on the BABEL dataset. Instructions 
 [//]: # (</details>)
 
 ## Data Preparation
-Please execute the following command to preprocess the BABEL dataset and extract the motion-text data. 
-For details of data preprocessing, you can check the collapsed section of training using custom dataset below.
+- Please first download the BABEL and AMASS SMPL-X gendered dataset and structure the folder as in [data setup section](#data-and-model-checkpoints).
+- Please execute the following command to preprocess the BABEL dataset and extract the motion-text data. 
+- For details of data preprocessing, you can check the collapsed section of training using custom dataset below.
 ```
 python -m data_scripts.extract_dataset
 ```
@@ -391,6 +392,8 @@ python -m control.train_reach_location_mld --track 1 --exp_name 'control_policy'
 <summary><b>Train with HML3D dataset:</b></summary>
 
 ## Data Preparation - HML3D
+
+Please first download the HML3D and AMASS SMPL-H gendered dataset and structure the folder as in [data setup section](#data-and-model-checkpoints).
 ```
 python -m data_scripts.extract_dataset_hml3d_smplh
 ```
