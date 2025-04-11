@@ -78,81 +78,6 @@ def downsample(fps, target_fps, seq_data):
         poses[:, joint_idx, :] = slerp(new_time).as_rotvec()
     return trans, poses.reshape((-1, 66))
 
-def visualize_samp_seq(input_path, start_frame, end_frame, text):
-    with open(input_path, 'rb') as f:
-        data = pickle.load(f, encoding='latin1')
-        print(data.keys())
-        framerate = data['mocap_framerate']
-        assert framerate == 120
-        print(framerate)
-        downsample_rate = int(framerate / target_fps)
-        full_poses = torch.tensor(data['pose_est_fullposes'][::downsample_rate], dtype=torch.float32)
-        betas = torch.tensor(data['shape_est_betas'][:10], dtype=torch.float32).reshape(1, 10)
-        full_trans = torch.tensor(data['pose_est_trans'][::downsample_rate], dtype=torch.float32)
-        print("Number of frames is {}".format(full_poses.shape[0]))
-
-    print(input_path, start_frame, end_frame, text)
-    scene = pyrender.Scene()
-    viewer = pyrender.Viewer(scene, use_raymond_lighting=True, run_in_thread=True, window_title=text)
-    m_node = None
-    for i in range(start_frame, end_frame):
-        global_orient = full_poses[i, 0:3].reshape(1, -1)
-        body_pose = full_poses[i, 3:66].reshape(1, -1)
-        transl = full_trans[i, :].reshape(1, -1)
-        output = body_model(global_orient=global_orient, body_pose=body_pose, betas=betas, transl=transl,
-                            return_verts=True)
-        m = trimesh.Trimesh(vertices=output.vertices.detach().numpy().squeeze(), faces=body_model.faces, process=False)
-        viewer.render_lock.acquire()
-        if m_node is not None:
-            scene.remove_node(m_node)
-        m_node = pyrender.Node(mesh=pyrender.Mesh.from_trimesh(m))
-        scene.add_node(m_node)
-        viewer.render_lock.release()
-    input('press enter to continue')
-    viewer.close_external()
-
-def add_samp(enforce_zero_male=False):
-    # load samp data
-    samp_dir = Path('./data/samp/')
-    # label_path = './data/samp_label.json'
-    label_path = './data/samp_label_walk.json'
-    with open(label_path, 'r') as f:
-        samp_labels = json.load(f)
-    for seq_path in tqdm(sorted(samp_dir.glob('*.pkl'))):
-        with open(seq_path, 'rb') as f:
-            seq_data = pickle.load(f, encoding='latin1')
-        fps = seq_data['mocap_framerate']
-        assert fps == 120.0
-        motion_data = {}
-        downsample_rate = int(fps / target_fps)
-        motion_data['trans'] = seq_data['pose_est_trans'][::downsample_rate].astype(np.float32)
-        motion_data['poses'] = seq_data['pose_est_fullposes'][::downsample_rate, :66].astype(np.float32)
-        motion_data['betas'] = seq_data['shape_est_betas'][:10].astype(np.float32)
-        motion_data['gender'] = str(seq_data['shape_est_templatemodel']).split('/')[-2]
-        if enforce_zero_male:
-            motion_data['betas'] = np.zeros_like(motion_data['betas'])
-            motion_data['gender'] = 'male'
-        joints, pelvis_delta = calc_joints_pelvis_delta(motion_data)
-        motion_data['joints'] = joints
-        motion_data['pelvis_delta'] = pelvis_delta
-
-        """move the code to remove short sequences to the dataset class"""
-        # if len(motion_data['trans']) < self.seq_length:
-        #     continue
-        seq_data_dict = {'motion': motion_data, 'data_source': 'samp', 'seq_name': seq_path.name[:-4]}
-        if seq_path.name in samp_labels:
-            frame_labels = samp_labels[seq_path.name]
-            # if 'table' in seq_path.name:
-            #     for seg in frame_labels:
-            #         visualize_samp_seq(seq_path, seg['start_t'], seg['end_t'], seg['proc_label'])
-            for label in frame_labels:
-                label['start_t'] = label['start_t'] / 30
-                label['end_t'] = label['end_t'] / 30
-            seq_data_dict['frame_labels'] = frame_labels
-
-        dataset['train'].append(seq_data_dict)
-
-
 def add_babel(enforce_zero_male=False, process_transition=False):
     # AMASS dataset names from website are slightly different from what used in BABEL
     amass_dataset_rename_dict = {
@@ -280,7 +205,6 @@ def add_babel(enforce_zero_male=False, process_transition=False):
 
 enforce_zero_male = True
 add_babel(enforce_zero_male=enforce_zero_male, process_transition=False)
-add_samp(enforce_zero_male=enforce_zero_male)
 
 output_path = f'./data/seq_data'
 if enforce_zero_male:

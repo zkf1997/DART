@@ -45,13 +45,24 @@ class PolicyArgs:
     n_blocks: int = 2
     dropout: float = 0.1
     activation: str = 'lrelu'
+
     min_log_std: float = -1.0
     max_log_std: float = 1.0
+    """clip range for log std"""
+
     pred_std: int = 0
+    """whether to predict std or not"""
+
     use_tanh_scale: int = 0
+    """whether to use tanh scale on the final layer output"""
+
     use_zero_init: int = 0
+    """whether to initialize the network weights with zero bias and weights of small variance """
+
     use_lora: int = 1
+    """obsolete"""
     lora_rank: int = 16
+    """obsolete"""
 
 
 @dataclass
@@ -63,9 +74,12 @@ class EnvArgs:
     num_steps: int = 256
     """the number of steps to run in each environment per policy rollout"""
     texts: tuple[str, ...] = ('walk',)
+    """the texts describing the locomotion skills"""
 
     use_predicted_joints: int = 1
+    """if set to 1, use predicted joints to rollout, otherwise use the regressed joints from smplx body model"""
 
+    """parameters for goal location curriculum"""
     goal_range: float = 1.0
     goal_angle_init: float = 0.0
     goal_angle_delta: float = 120.0
@@ -75,11 +89,14 @@ class EnvArgs:
     goal_dist_max_clamp: float = 5.0
     goal_schedule_interval: int = 10000
 
+    """parameters for goal observation angle and distance clipping"""
     obs_goal_angle_clip: float = 180.0
     obs_goal_dist_clip: float = 5.0
 
     success_threshold: float = 0.3
+    """distance threshold for success"""
     terminate_threshold: float = 100.0
+    """distance threshold for termination"""
 
     weight_success: float = 10.0
     weight_dist: float = 1.0

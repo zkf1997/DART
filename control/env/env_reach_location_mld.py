@@ -377,6 +377,7 @@ class EnvReachLocationMLD:
         is_hop = np.array(['hop' in goal_text for goal_text in goal_texts])
         is_run = np.array(['run' in goal_text for goal_text in goal_texts])
         reward_foot_floor[is_hop] *= 0.1  # reduce reward for hopping
+        reward_foot_floor[is_run] *= 0.1  # reduce reward for running
 
 
         all_foot_joints = torch.cat([history_global_joints[:, :, FOOT_JOINTS_IDX], foot_joints], dim=1)  # [B, H+F, foot, 3]

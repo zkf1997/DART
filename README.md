@@ -11,8 +11,8 @@ https://github.com/user-attachments/assets/b26e95e7-4af0-4548-bdca-8f361594951c
 # Updates
 This repository is under construction and the documentations for the following for will be updated. If you encounter any problems, please do not hesitate to contact us.
 
-- [ ] Setup, generation demos, and visualization
-- [ ] Data preparation and training
+- [x] Setup, generation demos, and visualization
+- [x] Data preparation and training
 - [ ] Evaluation
 
 # Getting Started
@@ -41,7 +41,7 @@ GPU, intel i7-13700K CPU, 64GiB memory. The workstation runs with Ubuntu 22.04.4
   
   * <details>
 
-    <summary>Project folder structure of separately downloaded data:</summary>
+    <summary><b>Project folder structure of separately downloaded data:</b></summary>
 
     ```
       ./
@@ -128,7 +128,7 @@ GPU, intel i7-13700K CPU, 64GiB memory. The workstation runs with Ubuntu 22.04.4
   
   <details>
 
-   <summary>Demonstration of importing motion into Blender:</summary>
+   <summary><b>Demonstration of importing motion into Blender:</b></summary>
 
     https://github.com/user-attachments/assets/a15fc9d6-507e-4521-aa3f-64b2db8c0252
 
@@ -197,7 +197,7 @@ You can easily test custom in-betweening by customizing `--optim_input` and `--t
 
  
 <details>  
-<summary>Using model trained on the HML3D dataset:</summary>
+<summary><b>Using model trained on the HML3D dataset:</b></summary>
 In addition to inbetweening with the model trained on the BABEL dataset (as demonstrated above), we also provide a script for inbetweening using a model trained on the HML3D dataset [here](./demos/inbetween_hml.sh). While you can generally use the HML3D-trained model for **all optimization-based demos** below, please note the following:
 
 - The text prompt style in HML3D differs from BABEL.
@@ -286,17 +286,138 @@ If you have ground truth initial bodies and joint trajectories from dataset, you
 
 # Training
 
+
+- Below we provide the documentation of data processing and model training using different data sources.
+By default, we provide commands for training on the BABEL dataset. Instructions for training on the HML3D dataset are available in the collapsible section. Additionally, guidance is provided for training on a custom motion dataset with text annotations.
+
+- We use [wandb](https://wandb.ai/site/) for training logging. You may need to set up your own wandb account and log in before running the training scripts.
+
+- Our training process includes stochastic factors such as random data sampling, scheduled training, and reinforcement learning-based policy training. As a result, we observed that different behaviors may occur when training on different environments.
+
+- You can test the trained models by changing the model path in the demo scripts.
+
 [//]: # (## Data Preparation)
+
+[//]: # (```)
+
+[//]: # (python -m data_scripts.extract_dataset)
+
+[//]: # (```)
 
 [//]: # ()
 [//]: # (## Motion Primitive VAE)
 
+[//]: # (``` )
+
+[//]: # (python -m mld.train_mvae --track 1 --exp_name 'mvae_fps_clip' --data_args.dataset 'mp_seq_v2' --data_args.data_dir './data/seq_data_zero_male' --data_args.cfg_path './config_files/config_hydra/motion_primitive/mp_h2_f8_r8.yaml' --data_args.weight_scheme 'text_samp:0.' --train_args.batch_size 128  --train_args.weight_kl 1e-6  --train_args.stage1_steps 100000 --train_args.stage2_steps 50000 --train_args.stage3_steps 50000 --train_args.save_interval 50000  --train_args.weight_smpl_joints_rec 10.0 --train_args.weight_joints_consistency 10.0 --train_args.weight_transl_delta 100 --train_args.weight_joints_delta 100 --train_args.weight_orient_delta 100  --model_args.arch 'all_encoder' --train_args.ema_decay 0.999 --model_args.num_layers 7 --model_args.latent_dim 1 256)
+
+[//]: # (```)
+
 [//]: # ()
 [//]: # (## Latent Motion Primitive Diffusion Model)
+
+[//]: # (``` )
+
+[//]: # (python -m mld.train_mld --track 1 --exp_name 'mld_fps_clip_repeat_euler' --train_args.batch_size 1024 --train_args.use_amp 1 --data_args.dataset 'mp_seq_v2' --data_args.data_dir './data/seq_data_zero_male' --data_args.cfg_path './config_files/config_hydra/motion_primitive/mp_h2_f8_r4.yaml' --denoiser_args.mvae_path './mvae/mvae_fps_clip/checkpoint_200000.pt' --denoiser_args.train_rollout_type 'full' --denoiser_args.train_rollout_history 'rollout' --train_args.stage1_steps 100000 --train_args.stage2_steps 100000 --train_args.stage3_steps 100000 --train_args.save_interval 100000 --train_args.weight_latent_rec 1.0 --train_args.weight_feature_rec 1.0 --train_args.weight_smpl_joints_rec 0 --train_args.weight_joints_consistency 0 --train_args.weight_transl_delta 1e4 --train_args.weight_joints_delta 1e4 --train_args.weight_orient_delta 1e4 --data_args.weight_scheme 'text_samp:0.' denoiser-args.model-args:denoiser-transformer-args)
+
+[//]: # (```)
 
 [//]: # ()
 [//]: # (## Motion Control Policy)
 
+[//]: # (```)
+
+[//]: # (python -m control.train_reach_location_mld --track 1 --exp_name 'fixtext_repeat_floor100_hop10_skate100' --denoiser_checkpoint './mld_denoiser/mld_fps_clip_euler/checkpoint_300000.pt' --total_timesteps 200000000 --env_args.export_interval 1000 --env_args.num_envs 256 --env_args.num_steps 32 --minibatch_size 1024 --update_epochs 10 --learning_rate 3e-4 --max_grad_norm 0.1 --env_args.texts 'walk' 'run' 'hop on left leg' --env_args.success_threshold 0.3 --env_args.weight_success 1.0 --env_args.weight_dist 1.0 --env_args.weight_foot_floor 100.0 --env_args.weight_skate 100.0 --env_args.weight_orient 0.1 --policy_args.min_log_std -1.0 --policy_args.max_log_std 1.0 --policy_args.latent_dim 512 --env_args.goal_dist_max_init 5.0 --env_args.goal_schedule_interval 50000  --policy_args.use_lora 0 --policy_args.lora_rank 16 --policy_args.n_blocks 2 --policy_args.use_tanh_scale 1 --policy_args.use_zero_init 1 --init_data_path './data/stand.pkl' --env_args.weight_rotation 10.0 --env_args.weight_delta 0.0  --env_args.obs_goal_angle_clip 60.0 --env_args.obs_goal_dist_clip 5.0  --env_args.use_predicted_joints 1 --env_args.goal_angle_init 120.0 --env_args.goal_angle_delta 0.0)
+
+[//]: # (```)
+
+[//]: # ()
+[//]: # (<details>)
+
+[//]: # (<summary> Train on HML3D dataset:</summary>)
+
+[//]: # ()
+[//]: # (## Data Preparation - HML3D)
+
+[//]: # (```)
+
+[//]: # (python -m data_scripts.extract_dataset_hml3d_smplh)
+
+[//]: # (```)
+
+[//]: # ()
+[//]: # (## Motion Primitive VAE - HML3D)
+
+[//]: # (```)
+
+[//]: # (python -m mld.train_mvae --track 1 --exp_name 'mvae_smplh_hml3d_2_8_4' --data_args.body_type 'smplh' --data_args.dataset 'hml3d' --data_args.data_dir './data/hml3d_smplh/seq_data_zero_male/' --data_args.cfg_path './config_files/config_hydra/motion_primitive/hml_mp_h2_f8_r4.yaml' --data_args.weight_scheme 'uniform' --train_args.batch_size 128  --train_args.weight_kl 1e-6  --train_args.stage1_steps 100000 --train_args.stage2_steps 50000 --train_args.stage3_steps 50000 --train_args.save_interval 50000  --train_args.weight_smpl_joints_rec 10.0 --train_args.weight_joints_consistency 10.0 --train_args.weight_transl_delta 100 --train_args.weight_joints_delta 100 --train_args.weight_orient_delta 100  --model_args.arch 'all_encoder' --train_args.ema_decay 0.999 --model_args.num_layers 7 --model_args.latent_dim 1 256)
+
+[//]: # (```)
+
+[//]: # ()
+[//]: # (## Latent Motion Primitive Diffusion Model - HML3D)
+
+[//]: # (```)
+
+[//]: # (python -m mld.train_mld --track 1 --exp_name 'smplh_hml3d_2_8_4' --train_args.batch_size 1024 --train_args.use_amp 1 --data_args.body_type 'smplh' --data_args.dataset 'hml3d' --data_args.data_dir './data/hml3d_smplh/seq_data_zero_male/' --data_args.cfg_path './config_files/config_hydra/motion_primitive/hml_mp_h2_f8_r4.yaml' --denoiser_args.mvae_path './mvae/mvae_smplh_hml3d_2_8_4/checkpoint_200000.pt' --denoiser_args.train_rollout_type 'full' --denoiser_args.train_rollout_history 'rollout' --train_args.stage1_steps 100000 --train_args.stage2_steps 100000 --train_args.stage3_steps 100000 --train_args.save_interval 100000 --train_args.weight_latent_rec 1.0 --train_args.weight_feature_rec 1.0 --train_args.weight_smpl_joints_rec 0 --train_args.weight_joints_consistency 0 --train_args.weight_transl_delta 1e4 --train_args.weight_joints_delta 1e4 --train_args.weight_orient_delta 1e4 --data_args.weight_scheme 'uniform' denoiser-args.model-args:denoiser-transformer-args)
+
+[//]: # (```)
+
+[//]: # (</details>)
+
+## Data Preparation
+Please execute the following command to preprocess the BABEL dataset and extract the motion-text data. 
+For details of data preprocessing, you can check the collapsed section of training using custom dataset below.
+```
+python -m data_scripts.extract_dataset
+```
+
+## Train Motion Primitive VAE
+``` 
+python -m mld.train_mvae --track 1 --exp_name 'mvae_babel_smplx' --data_args.dataset 'mp_seq_v2' --data_args.data_dir './data/seq_data_zero_male' --data_args.cfg_path './config_files/config_hydra/motion_primitive/mp_h2_f8_r8.yaml' --data_args.weight_scheme 'text_samp:0.' --train_args.batch_size 128  --train_args.weight_kl 1e-6  --train_args.stage1_steps 100000 --train_args.stage2_steps 50000 --train_args.stage3_steps 50000 --train_args.save_interval 50000  --train_args.weight_smpl_joints_rec 10.0 --train_args.weight_joints_consistency 10.0 --train_args.weight_transl_delta 100 --train_args.weight_joints_delta 100 --train_args.weight_orient_delta 100  --model_args.arch 'all_encoder' --train_args.ema_decay 0.999 --model_args.num_layers 7 --model_args.latent_dim 1 256
+```
+
+## Train Latent Motion Primitive Diffusion Model
+``` 
+python -m mld.train_mld --track 1 --exp_name 'mld_babel_smplx' --train_args.batch_size 1024 --train_args.use_amp 1 --data_args.dataset 'mp_seq_v2' --data_args.data_dir './data/seq_data_zero_male' --data_args.cfg_path './config_files/config_hydra/motion_primitive/mp_h2_f8_r4.yaml' --denoiser_args.mvae_path './mvae/mvae_babel_smplx/checkpoint_200000.pt' --denoiser_args.train_rollout_type 'full' --denoiser_args.train_rollout_history 'rollout' --train_args.stage1_steps 100000 --train_args.stage2_steps 100000 --train_args.stage3_steps 100000 --train_args.save_interval 100000 --train_args.weight_latent_rec 1.0 --train_args.weight_feature_rec 1.0 --train_args.weight_smpl_joints_rec 0 --train_args.weight_joints_consistency 0 --train_args.weight_transl_delta 1e4 --train_args.weight_joints_delta 1e4 --train_args.weight_orient_delta 1e4 --data_args.weight_scheme 'text_samp:0.' denoiser-args.model-args:denoiser-transformer-args
+```
+
+## Train Motion Control Policy
+```
+python -m control.train_reach_location_mld --track 1 --exp_name 'control_policy' --denoiser_checkpoint './mld_denoiser/mld_fps_clip_euler/checkpoint_300000.pt' --total_timesteps 200000000 --env_args.export_interval 1000 --env_args.num_envs 256 --env_args.num_steps 32 --minibatch_size 1024 --update_epochs 10 --learning_rate 3e-4 --max_grad_norm 0.1 --env_args.texts 'walk' 'run' 'hop on left leg' --env_args.success_threshold 0.3 --env_args.weight_success 1.0 --env_args.weight_dist 1.0 --env_args.weight_foot_floor 100.0 --env_args.weight_skate 100.0 --env_args.weight_orient 0.1 --policy_args.min_log_std -1.0 --policy_args.max_log_std 1.0 --policy_args.latent_dim 512 --env_args.goal_dist_max_init 5.0 --env_args.goal_schedule_interval 50000  --policy_args.use_lora 0 --policy_args.lora_rank 16 --policy_args.n_blocks 2 --policy_args.use_tanh_scale 1 --policy_args.use_zero_init 1 --init_data_path './data/stand.pkl' --env_args.weight_rotation 10.0 --env_args.weight_delta 0.0  --env_args.obs_goal_angle_clip 60.0 --env_args.obs_goal_dist_clip 5.0  --env_args.use_predicted_joints 1 --env_args.goal_angle_init 120.0 --env_args.goal_angle_delta 0.0
+```
+
+<details>
+<summary><b>Train with HML3D dataset:</b></summary>
+
+## Data Preparation - HML3D
+```
+python -m data_scripts.extract_dataset_hml3d_smplh
+```
+
+## Train Motion Primitive VAE - HML3D
+```
+python -m mld.train_mvae --track 1 --exp_name 'mvae_hml3d_smplh' --data_args.body_type 'smplh' --data_args.dataset 'hml3d' --data_args.data_dir './data/hml3d_smplh/seq_data_zero_male/' --data_args.cfg_path './config_files/config_hydra/motion_primitive/hml_mp_h2_f8_r4.yaml' --data_args.weight_scheme 'uniform' --train_args.batch_size 128  --train_args.weight_kl 1e-6  --train_args.stage1_steps 100000 --train_args.stage2_steps 50000 --train_args.stage3_steps 50000 --train_args.save_interval 50000  --train_args.weight_smpl_joints_rec 10.0 --train_args.weight_joints_consistency 10.0 --train_args.weight_transl_delta 100 --train_args.weight_joints_delta 100 --train_args.weight_orient_delta 100  --model_args.arch 'all_encoder' --train_args.ema_decay 0.999 --model_args.num_layers 7 --model_args.latent_dim 1 256
+```
+
+## Train Latent Motion Primitive Diffusion Model - HML3D
+```
+python -m mld.train_mld --track 1 --exp_name 'mld_hml3d_smplh' --train_args.batch_size 1024 --train_args.use_amp 1 --data_args.body_type 'smplh' --data_args.dataset 'hml3d' --data_args.data_dir './data/hml3d_smplh/seq_data_zero_male/' --data_args.cfg_path './config_files/config_hydra/motion_primitive/hml_mp_h2_f8_r4.yaml' --denoiser_args.mvae_path './mvae/mvae_hml3d_smplh/checkpoint_200000.pt' --denoiser_args.train_rollout_type 'full' --denoiser_args.train_rollout_history 'rollout' --train_args.stage1_steps 100000 --train_args.stage2_steps 100000 --train_args.stage3_steps 100000 --train_args.save_interval 100000 --train_args.weight_latent_rec 1.0 --train_args.weight_feature_rec 1.0 --train_args.weight_smpl_joints_rec 0 --train_args.weight_joints_consistency 0 --train_args.weight_transl_delta 1e4 --train_args.weight_joints_delta 1e4 --train_args.weight_orient_delta 1e4 --data_args.weight_scheme 'uniform' denoiser-args.model-args:denoiser-transformer-args
+```
+</details>
+
+<details>
+<summary><b>Train using custom dataset:</b></summary>
+
+- Our model can train on custom motion dataset with text annotations.
+We expect the motion data to be sequences of SMPL-X/H parameters.
+We structure the text annotations for each sequence according to the BABEL annotation format. In this format, a sequence can have an arbitrary number of segment text labels. Each segment is defined by a start time (`start_t`) and an end time (`end_t`), both measured in seconds. The text annotation for each segment is stored under the key `proc_label`.
+The segments can overlap, and the segments can also range the whole sequence as in the HML3D dataset.
+Please check the data preprocessing script for [BABEL](./data_scripts/extract_dataset.py) and [HML3D](./data_scripts/extract_dataset_hml3d_smplh.py) for details. 
+- Please export the dataset to a separate folder and recalcualte the mean and std statistics for motion features using the custom dataset.
+- You can specify the data source when training the motion primitive VAE or latent diffusion model using `--data_args.data_dir`, and the body type using `--data_args.body_type`.
+The configurations of motion primitive length, max rollout number in scheduled training, FPS of motion data are set in the [cfg files](). 
+</details>
 
 # Evaluation
 

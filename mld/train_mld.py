@@ -40,6 +40,7 @@ debug = 0
 class DiffusionArgs:
     diffusion_steps: int = 10
     respacing: str = ''
+    """configuration for using DDIM sampling"""
     noise_schedule: Literal['linear', 'cosine'] = 'cosine'
     sigma_small: bool = True
 
@@ -52,6 +53,7 @@ class DenoiserMLPArgs:
     activation: str = "gelu"
 
     cond_mask_prob: float = 0.1
+    """probability of masking the conditioning input"""
 
     clip_dim: int = 512
     history_shape: tuple = (2, 276)
@@ -68,6 +70,7 @@ class DenoiserTransformerArgs:
     activation: str = "gelu"
 
     cond_mask_prob: float = 0.1
+    """probability of masking the conditioning input"""
 
     clip_dim: int = 512
     history_shape: tuple = (2, 276)
@@ -80,10 +83,12 @@ class DenoiserArgs:
     rescale_latent: int = 1
 
     train_rollout_type: Literal["single", "full"] = "single"
+    """whether to use the full denoising loop to generate the previous primitive or a single step in rollout training"""
     train_rollout_history: str = "gt"  # "rollout" or "gt"
 
     model_type: str = "mlp"
     model_args: DenoiserMLPArgs | DenoiserTransformerArgs = DenoiserMLPArgs()
+    """choose model type, either mlp or transformer"""
 
     diffusion_args: DiffusionArgs = DiffusionArgs()
 

@@ -40,25 +40,41 @@ class VAEArgs:
     latent_dim: tuple[int, int] = (1, 128)
     h_dim: int = 256
 
-    nfeats: int = 0  # to be filled in
+    nfeats: int = 0
+    """feature dimension, will be auto filled"""
 
 @dataclass
 class DataArgs:
     cfg_path: str = "./config_files/config_hydra/motion_primitive/mp_h2_h8_r1.yaml"
+    """motion primitive config file"""
+
     data_dir: str = "./data/seq_data"
+    """processed dataset directory"""
+
     dataset: str = "mp_seq"
+    """dataset name"""
+
     prob_static: float = 0.0
     enforce_gender: str = 'male'
+    """enforce all data use the specified gender"""
+
     enforce_zero_beta: int = 1
+    """enforce all data use zero shape parameters"""
+
     weight_scheme: str = 'uniform_samp:0.'
-    text_tolerance: float = 0.0  # accept text labels in near future within some frames
+    """weighting schemes determining how motion primitives are sampled during training"""
+
+    text_tolerance: float = 0.0
+    """accept text labels in near future within some frames"""
 
     history_length: int = 0
     future_length: int = 0
     num_primitive: int = 0
     feature_dim: int = 0
+    """auto filled"""
 
     body_type: str = 'smplx'
+    """body type, 'smplx' or 'smplh'"""
 
 @dataclass
 class TrainArgs:
@@ -66,12 +82,18 @@ class TrainArgs:
     anneal_lr: int = 1
     batch_size: int = 128
     grad_clip: float = 1.0
+
     ema_decay: float = 0.999
+    """exponential moving average decay"""
     use_amp: int = 0
+    """use automatic mixed precision"""
 
     stage1_steps: int = 100000
+    """training steps for stage 1 without rollout training"""
     stage2_steps: int = 100000
+    """training steps for stage 2 with linearly increasing percent of rollout training"""
     stage3_steps: int = 100000
+    """training steps for stage 3 with only rollout training"""
 
     weight_rec: float = 1.0  # vae only
     weight_kl: float = 1e-4  # vae only
@@ -89,6 +111,7 @@ class TrainArgs:
     save_interval: int = 100000
 
     use_predicted_joints: int = 0
+    """if set to 1, use predicted joints to rollout, otherwise use the regressed joints from smplx body model"""
 
 
 @dataclass
