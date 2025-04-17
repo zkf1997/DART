@@ -1,0 +1,30 @@
+{
+	"lengths": [
+		80,
+		40,
+		64,
+		40,
+		24,
+		48,
+		32,
+		80,
+		80,
+		96,
+		40,
+		80
+	],
+	"text": [
+		"wave hands",
+		"walk forward",
+		"cartwheel",
+		"walk forward",
+		"turn left",
+		"sit down",
+		"stand up",
+		"hop on left leg",
+		"pace in circle",
+		"dance",
+		"stand",
+		"wave right hand"
+	]
+}

@@ -249,7 +249,8 @@ if __name__ == '__main__':
                 npy_path = output_dir / f'{config_idx}.npy'
 
                 if not (output_dir / config_file.name).exists():
-                    os.symlink(config_file, output_dir / config_file.name)
+                    config_file_abs = os.path.abspath(config_file)
+                    os.symlink(config_file_abs, output_dir / config_file.name)
 
                 # save sequence
                 idx = int(replicate_idx)

@@ -4,6 +4,10 @@ import random
 import numpy as np
 import json
 from tqdm import tqdm
+from config_files.data_paths import *
+
+random.seed(0)
+np.random.seed(0)
 
 # AMASS dataset names from website are slightly different from what used in BABEL
 amass_dataset_rename_dict = {
@@ -22,22 +26,16 @@ amass_dataset_rename_dict = {
     'SSM_synced': 'SSM',
     'MPI_mosh': 'MoSh',
 }
-raw_dataset_path = '/home/kaizhao/dataset/amass/smplx_g/'
+raw_dataset_path = amass_dir / 'smplx_g/'
 target_fps = 30
 
 babel = {}
-with open('/home/kaizhao/projects/flowmdm/dataset/babel/babel-teach/val.json', 'r') as f:
+with open(babel_dir / 'val.json', 'r') as f:
     babel['val'] = json.load(f)
 spl = 'val'
 
-with open('./data/val_only_retrieval.json', 'r') as f:
-    val_only_retrieval = json.load(f)
-
 seq_cfg_list = []
 for sid in tqdm(babel[spl].keys()):
-    # if sid != '1511':
-    #     continue
-    # seq_info = {}
     feat_p = babel[spl][sid]['feat_p']
     file_path = os.path.join(*(feat_p.split(os.path.sep)[1:]))
     dataset_name = file_path.split(os.path.sep)[0]
@@ -51,8 +49,6 @@ for sid in tqdm(babel[spl].keys()):
     seq_path = os.path.join(raw_dataset_path, file_path)
     if not os.path.exists(seq_path):
         continue
-    # if not 'frame_labels' in seq_info:
-    #     continue
 
     if 'frame_ann' in babel[spl][sid] and babel[spl][sid]['frame_ann'] is not None:
         frame_labels = babel[spl][sid]['frame_ann']['labels']
@@ -67,8 +63,6 @@ for sid in tqdm(babel[spl].keys()):
         motion_data['betas'] = seq_data['betas'][:10].astype(np.float32)
         motion_data['gender'] = str(seq_data['gender'].item())
         """move the code to remove short sequences to the dataset class"""
-        # if len(motion_data['trans']) < self.seq_length:
-        #     continue
         seq_data_dict = {'motion': motion_data, 'data_source': 'babel', 'seq_name': file_path, 'feat_p': feat_p}
 
         frame_labels = babel[spl][sid]['seq_ann']['labels']  # onle one element
@@ -97,7 +91,6 @@ for sid in tqdm(babel[spl].keys()):
         'text': [],
         'lengths': [],
     }
-    # print(time_points)
     for idx in range(len(time_points) - 1):
         start_t = time_points[idx]
         end_t = time_points[idx + 1]
@@ -111,15 +104,12 @@ for sid in tqdm(babel[spl].keys()):
             overlap_time = min(end_t, seg['end_t']) - max(start_t, seg['start_t'])
             if overlap_time > 1e-6:
                 proc_label = seg['proc_label']
-                # if proc_label in val_only_retrieval:  # replace with the retrieval label
-                #     proc_label = val_only_retrieval[proc_label]
                 texts.append(proc_label)
         if len(texts) == 0:
             continue
         print(sid, start_t, end_t, texts)
         compo_text = ' and '.join(texts)
         random_text = random.choice(texts)
-        # seq_cfg['text'].append(compo_text)
         seq_cfg['text'].append(random_text)
         seq_cfg['lengths'].append(max(num_frames, 15))  # at least 15 frames, compatible with flowmdm
     if len(seq_cfg['text']) == 0:
@@ -131,8 +121,6 @@ for sid in tqdm(babel[spl].keys()):
     print(seq_cfg)
     seq_cfg_list.append(seq_cfg)
 
-    # break
-
 random.shuffle(seq_cfg_list)
-with open('./data/babel_random.json', 'w') as f:
+with open('./FlowMDM/dataset/babel_random_seed0.json', 'w') as f:
     json.dump(seq_cfg_list[:], f, indent=4)

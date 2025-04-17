@@ -27,18 +27,17 @@ amass_dataset_rename_dict = {
 def export(feat_p, start_frame, end_frame, texts, output_path, output_mode='default', target_fps=30, body_type='smplx'):
     print(f'Exporting {feat_p} from frame {start_frame} to {end_frame} to {output_path}')
     file_path = os.path.join(*(feat_p.split(os.path.sep)[1:]))
-    if body_type == 'smplx':
-        dataset_name = file_path.split(os.path.sep)[0]
-        if dataset_name in amass_dataset_rename_dict:
-            file_path = file_path.replace(dataset_name, amass_dataset_rename_dict[dataset_name])
-        file_path = file_path.replace('poses.npz',
-                                      'stageii.npz')  # file naming suffix changed in different amass versions
-        # replace space
-        file_path = file_path.replace(" ",
-                                      "_")  # set replace count to string length, so all will be replaced
+    dataset_name = file_path.split(os.path.sep)[0]
+    if dataset_name in amass_dataset_rename_dict:
+        file_path = file_path.replace(dataset_name, amass_dataset_rename_dict[dataset_name])
+    file_path = file_path.replace('poses.npz',
+                                  'stageii.npz')  # file naming suffix changed in different amass versions
+    # replace space
+    file_path = file_path.replace(" ",
+                                  "_")  # set replace count to string length, so all will be replaced
     seq = os.path.join(raw_dataset_path, file_path)
     data = dict(np.load(seq, allow_pickle=True))
-    frame_rate = data['mocap_frame_rate'].item() if body_type == 'smplx' else data['mocap_framerate']
+    frame_rate = data['mocap_frame_rate'].item()
     downsample_rate = int(frame_rate // target_fps)
     ## read data and downsample
     transl_all = data['trans'][::downsample_rate]
@@ -83,15 +82,12 @@ def export(feat_p, start_frame, end_frame, texts, output_path, output_mode='defa
         with open(output_path, 'wb') as f:
             np.save(f, {'transl': transl, 'rots': poses})
 
-history_length = 2
 # target_fps = 30
-# body_type = 'smplx'
 target_fps = 20
-body_type = 'smplh'
 # output_mode = 'default'
 output_mode = '1f'
-export_path = Path(f'./data/opt_eval_{target_fps}fps_{body_type}_{output_mode}')
-raw_dataset_path = '/home/kaizhao/dataset/amass/smplx_g' if body_type == 'smplx' else '/home/kaizhao/dataset/amass/smplh_g'
+export_path = Path(f'./data/inbetween/opt_eval_{target_fps}fps_{output_mode}')
+raw_dataset_path = './data/amass/smplx_g'
 seq_list = []
 
 feat_p = 'KIT/KIT/9/LeftTurn07_poses.npz'
@@ -184,4 +180,4 @@ for idx, seq in enumerate(seq_list):
     texts = seq['texts']
     file_name = '+'.join(texts)
     output_path = export_path / f'{idx}_{file_name}.pkl'
-    export(feat_p, start_frame, end_frame, texts, output_path, target_fps=target_fps, body_type=body_type, output_mode=output_mode)
+    export(feat_p, start_frame, end_frame, texts, output_path, target_fps=target_fps, output_mode=output_mode)

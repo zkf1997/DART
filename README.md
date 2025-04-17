@@ -13,7 +13,7 @@ This repository is under construction and the documentations for the following f
 
 - [x] Setup, generation demos, and visualization
 - [x] Data preparation and training
-- [ ] Evaluation
+- [x] Evaluation
 
 # Getting Started
 
@@ -424,18 +424,40 @@ The configurations of motion primitive length, max rollout number in scheduled t
 
 # Evaluation
 
-[//]: # (## Text-Conditioned Temporal Motion Composition)
+## Text-Conditioned Temporal Motion Composition
+The evaluation for text-conditioned temporal motion composition is based on the [FlowMDM](https://github.com/BarqueroGerman/FlowMDM) code. 
+Please first set up the FlowMDM dependencies as follows:
+- Set up the required dependencies: `source ./FlowMDM/setup.sh`
+- Download the processed BABEL dataset for evaluation:
+    - Download the processed version [here](https://drive.google.com/file/d/18a4eRh8mbIFb55FMHlnmI8B8tSTkbp4t/view?usp=share_link), and place it at `./FlowMDM/dataset/babel`.
+    - Download the following [here](https://drive.google.com/file/d/1PBlbxawaeFTxtKkKDsoJwQGuDTdp52DD/view?usp=sharing), and place it at `./FlowMDM/dataset/babel`.
 
-[//]: # ()
-[//]: # (## Text-Conditioned Motion In-betweening)
+[//]: # (    - Reference from FlowMDM: https://github.com/BarqueroGerman/FlowMDM/tree/main/runners)
 
-[//]: # ()
-[//]: # (## Text-Conditioned Goal Reaching)
+After setting up the dependencies, you can run the evaluation using the following command. The FlowMDM generation part may take around 1 day.
+```
+source ./evaluation/eval_gen_composition.sh
+```
+- The evaluation results of FlowMDM will be saved at `./FlowMDM/results/babel/FlowMDM/evaluations_summary/001300000_fast_10_transLen30babel_random_seed0.json`.
+- The evaluation results of DART will be saved at `./FlowMDM/results/babel/Motion_FlowMDM_001300000_gscale1.5_fastbabel_random_seed0_s10/mld_fps_clip_repeat_euler_checkpoint_300000_guidance5.0_seed0/evaluations_summary/fast_10_transLen30babel_random_seed0.json`.
+
+## Text-Conditioned Motion In-betweening
+The generation and evaluation can be executed with the command below. The results will be displayed in the command line, and the file save path will also be indicated there.
+```
+source ./evaluation/eval_gen_inbetween.sh
+```
+
+
+## Text-Conditioned Goal Reaching
+The generation and evaluation can be executed with the command below. The results will be displayed in the command line, and the file save path will also be indicated there.
+```
+source ./evaluation/eval_gen_goal_reach.sh
+```
 
 # Acknowledgements
 Our code is built upon many prior projects, including but not limited to:
 
-[DNO](https://github.com/korrawe/Diffusion-Noise-Optimization), [MDM](https://github.com/GuyTevet/motion-diffusion-model), [MLD](https://github.com/ChenFengYe/motion-latent-diffusion), [text-to-motion](https://github.com/EricGuo5513/text-to-motion), [guided-diffusion](https://github.com/openai/guided-diffusion), [ACTOR](https://github.com/Mathux/ACTOR), [DIMOS](https://github.com/zkf1997/DIMOS)
+[DNO](https://github.com/korrawe/Diffusion-Noise-Optimization), [MDM](https://github.com/GuyTevet/motion-diffusion-model), [MLD](https://github.com/ChenFengYe/motion-latent-diffusion), [FlowMDM](https://github.com/BarqueroGerman/FlowMDM), [text-to-motion](https://github.com/EricGuo5513/text-to-motion), [guided-diffusion](https://github.com/openai/guided-diffusion), [ACTOR](https://github.com/Mathux/ACTOR), [DIMOS](https://github.com/zkf1997/DIMOS)
 
 [//]: # (# License)
 
