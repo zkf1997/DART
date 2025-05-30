@@ -1,0 +1,14 @@
+[
+  {
+    "scene_dir": "./data/scene_mesh_4render/seminar_h52/",
+    "floor_height": 0.0,
+    "interaction_name": "walk",
+    "interactions": [
+      {
+        "text_prompt": "walk*10",
+        "init_loc": [-2, -0.8, 0.0],
+        "goal_loc": [-2, 1.1, 0.0]
+      }
+    ]
+  }
+]

@@ -1,0 +1,182 @@
+[
+  {
+    "scene_dir": "./data/scene_mesh_4render/cab_e/",
+    "floor_height": 0.0,
+    "interaction_name": "walk",
+    "interactions": [
+      {
+        "text_prompt": "walk*10",
+        "init_loc": [-1.5, 0.25, 0.0],
+        "goal_loc": [0, -0.6, 0.0]
+      }
+    ]
+  },
+  {
+    "scene_dir": "./data/scene_mesh_4render/cab_g_benches/",
+    "floor_height": 0.0,
+    "interaction_name": "walk",
+    "interactions": [
+      {
+        "text_prompt": "walk*15",
+        "init_loc": [-1.45, -2.96, 0.0],
+        "goal_loc": [0, 0.0, 0.0]
+      }
+    ]
+  },
+  {
+    "scene_dir": "./data/scene_mesh_4render/cab_h_tables/",
+    "floor_height": 0.0,
+    "interaction_name": "walk",
+    "interactions": [
+      {
+        "text_prompt": "walk*15",
+        "init_loc": [1.93, -1.00, 0.0],
+        "goal_loc": [0.51, 2.00, 0.0]
+      }
+    ]
+  },
+  {
+    "scene_dir": "./data/scene_mesh_4render/cnb_dlab_0215/",
+    "floor_height": 0.0,
+    "interaction_name": "walk",
+    "interactions": [
+      {
+        "text_prompt": "walk*10",
+        "init_loc": [1.95, 0.23, 0.0],
+        "goal_loc": [0.25, 0.09, 0.0]
+      }
+    ]
+  },
+  {
+    "scene_dir": "./data/scene_mesh_4render/cnb_dlab_0225/",
+    "floor_height": 0.0,
+    "interaction_name": "walk",
+    "interactions": [
+      {
+        "text_prompt": "walk*15",
+        "init_loc": [-2.5, -1.1, 0.0],
+        "goal_loc": [-0.74, 0.0, 0.0]
+      }
+    ]
+  },
+  {
+    "scene_dir": "./data/scene_mesh_4render/foodlab_0312/",
+    "floor_height": 0.0,
+    "interaction_name": "walk",
+    "interactions": [
+      {
+        "text_prompt": "walk*10",
+        "init_loc": [-1.93, -1.94, 0.0],
+        "goal_loc": [-1.5, -0.46, 0.0]
+      }
+    ]
+  },
+  {
+    "scene_dir": "./data/scene_mesh_4render/kitchen_gfloor/",
+    "floor_height": 0.0,
+    "interaction_name": "walk",
+    "interactions": [
+      {
+        "text_prompt": "walk*15",
+        "init_loc": [0.0, 0.0, 0.0],
+        "goal_loc": [-2.17, -0.53, 0.0]
+      }
+    ]
+  },
+  {
+    "scene_dir": "./data/scene_mesh_4render/seminar_d78/",
+    "floor_height": 0.0,
+    "interaction_name": "walk",
+    "interactions": [
+      {
+        "text_prompt": "walk*15",
+        "init_loc": [0.95, 0.26, 0.0],
+        "goal_loc": [-0.6, -1.5, 0.0]
+      }
+    ]
+  },
+  {
+    "scene_dir": "./data/scene_mesh_4render/seminar_d78_0318/",
+    "floor_height": 0.0,
+    "interaction_name": "walk",
+    "interactions": [
+      {
+        "text_prompt": "walk*15",
+        "init_loc": [-0.4, -2.9, 0.0],
+        "goal_loc": [-1.0, -0.0, 0.0]
+      }
+    ]
+  },
+  {
+    "scene_dir": "./data/scene_mesh_4render/seminar_g110/",
+    "floor_height": 0.0,
+    "interaction_name": "walk",
+    "interactions": [
+      {
+        "text_prompt": "walk*15",
+        "init_loc": [0.50, -1.74, 0.0],
+        "goal_loc": [1.86, 0.06, 0.0]
+      }
+    ]
+  },
+  {
+    "scene_dir": "./data/scene_mesh_4render/seminar_g110_0315/",
+    "floor_height": 0.0,
+    "interaction_name": "walk",
+    "interactions": [
+      {
+        "text_prompt": "walk*15",
+        "init_loc": [-1.18, 0.15, 0.0],
+        "goal_loc": [0.32, 1.98, 0.0]
+      }
+    ]
+  },
+  {
+    "scene_dir": "./data/scene_mesh_4render/seminar_g110_0415/",
+    "floor_height": 0.0,
+    "interaction_name": "walk",
+    "interactions": [
+      {
+        "text_prompt": "walk*10",
+        "init_loc": [1.3, 1.6, 0.0],
+        "goal_loc": [-0.6, 1.37, 0.0]
+      }
+    ]
+  },
+  {
+    "scene_dir": "./data/scene_mesh_4render/seminar_h52/",
+    "floor_height": 0.0,
+    "interaction_name": "walk",
+    "interactions": [
+      {
+        "text_prompt": "walk*15",
+        "init_loc": [-2, -0.8, 0.0],
+        "goal_loc": [-2, 1.1, 0.0]
+      }
+    ]
+  },
+  {
+    "scene_dir": "./data/scene_mesh_4render/seminar_h53_0218/",
+    "floor_height": 0.0,
+    "interaction_name": "walk",
+    "interactions": [
+      {
+        "text_prompt": "walk*15",
+        "init_loc": [0, -2.1, 0.0],
+        "goal_loc": [-0.94, 0.66, 0.0]
+      }
+    ]
+  },
+   {
+    "scene_dir": "./data/scene_mesh_4render/seminar_j716/",
+    "floor_height": 0.0,
+    "interaction_name": "walk",
+    "interactions": [
+      {
+        "text_prompt": "walk*15",
+        "init_loc": [1.57, 0.0, 0.0],
+        "goal_loc": [1.0, 1.59, 0.0]
+      }
+    ]
+  }
+]

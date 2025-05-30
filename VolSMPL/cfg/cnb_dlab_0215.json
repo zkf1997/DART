@@ -1,0 +1,14 @@
+[
+ {
+    "scene_dir": "./data/scene_mesh_4render/cnb_dlab_0215/",
+    "floor_height": 0.0,
+    "interaction_name": "walk",
+    "interactions": [
+      {
+        "text_prompt": "walk*10",
+        "init_loc": [1.95, 0.23, 0.0],
+        "goal_loc": [0.25, 0.09, 0.0]
+      }
+    ]
+  }
+]
