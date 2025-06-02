@@ -54,7 +54,7 @@ def get_scene_points(scene_path):
 
 def calc_coll_coap(seq_data):
     scene_points = get_scene_points(seq_data['scene_path']).unsqueeze(0)
-    num_frames = seq_data['num_frames']
+    num_frames = seq_data['betas'].shape[0]
     coll = []
     for idx in range(num_frames):
         smpl_params = {
@@ -77,7 +77,7 @@ def calc_coll_coap(seq_data):
 
 def calc_volsmpl(seq_data):
     scene_points = get_scene_points(seq_data['scene_path']).unsqueeze(0)
-    num_frames = seq_data['num_frames']
+    num_frames = seq_data['betas'].shape[0]
     coll = []
     for idx in range(num_frames):
         smpl_params = {
@@ -114,9 +114,6 @@ def eval_results(results_list, is_coap=False):
         time = data['sync_time']
         memory = data['max_memory']
         num_frames = 16 if is_coap else data['betas'].shape[0]
-        if data['betas'].shape[0] != 82:
-            continue
-        # print(result, num_frames)
         metrics['time'].append(time)
         metrics['memory'].append(memory)
         metrics['time_per_frame'].append(time / num_frames)
@@ -126,7 +123,6 @@ def eval_results(results_list, is_coap=False):
         goal_location = goal_dict[scene_name]
         goal_dist = np.linalg.norm(pelvis[:2] - goal_location[:2])
         metrics['goal_dist'].append(goal_dist)
-        # metrics['goal_dist'].append(data['loss_joints'])
         metrics['coll_coap'].append(calc_coll_coap(data))
         metrics['coll_volsmpl'].append(calc_volsmpl(data))
 
