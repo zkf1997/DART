@@ -14,7 +14,7 @@ pip install VolumetricSMPL
 pip install git+https://github.com/markomih/COAP.git
 ```
 
-To run the navigation demo in EgoBody scenes, please download the scene assets from [EgoBody](https://egobody.ethz.ch/) and place the scene assets in `./data/scene_mesh_4render`. The dataset structure should look like this:
+To run the navigation demo in EgoBody scenes, please download the scene assets from [EgoBody dataset](https://egobody.ethz.ch/data/dataset/scene_mesh_4render_dart.zip) and place the scene assets in `./data/scene_mesh_4render`. The dataset structure should look like this:
     
 ```
   ./
