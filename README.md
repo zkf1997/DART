@@ -34,6 +34,7 @@ GPU, intel i7-13700K CPU, 64GiB memory. The workstation runs with Ubuntu 22.04.4
 * Please download the following data from the respective websites and organize as shown below:
   * [SMPL-X body model](https://download.is.tue.mpg.de/download.php?domain=smplx&sfile=smplx_lockedhead_20230207.zip)
   * [SMPL-H body model](https://download.is.tue.mpg.de/download.php?domain=mano&resume=1&sfile=smplh.tar.xz)
+    * [How to convert to PKL](https://github.com/vchoutas/smplx/blob/main/tools/README.md)
   * [AMASS](https://amass.is.tue.mpg.de/) (Only required for training, please down the gender-specific data for SMPL-H and SMPL-X)
   * [BABEL](https://download.is.tue.mpg.de/download.php?domain=teach&resume=1&sfile=babel-data/babel-teach.zip) (Only required for training)
   * [HumanML3D](https://github.com/EricGuo5513/HumanML3D)(Only required for training)
